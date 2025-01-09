@@ -16,7 +16,7 @@ function Footer() {
           </div>
           <div className="contact-info">
             <p><FaPhoneAlt /> (123) 456-7890</p>
-            <p><FaEnvelope /> info@ladylalice.com</p>
+            <p><FaEnvelope /> info@labylalice.com</p>
           </div>
         </div>
 
