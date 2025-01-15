@@ -1,0 +1,89 @@
+/* Container chính */
+.order-history-container {
+    padding: 20px;
+    font-family: 'Josefin Sans', sans-serif;
+    margin-top: 150px;
+    border-radius: 8px; /* Giữ lại border-radius để các góc của container mềm mại */
+  }
+  
+  /* Tiêu đề */
+  .order-history-container .MuiTypography-root {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #dc4ea3;
+  }
+  
+  /* Phần lọc trạng thái */
+  .status-filter {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .status-filter label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+  }
+  
+  .status-filter select {
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    font-family: 'Josefin Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 250px;
+  }
+  
+  /* Hiệu ứng hover và focus cho select */
+  .status-filter select:hover {
+    border-color: #3f51b5;
+    background-color: #f5f5f5;
+  }
+  
+  .status-filter select:focus {
+    outline: none;
+    border-color: #3f51b5;
+    box-shadow: 0 0 4px rgba(63, 81, 181, 0.5);
+    background-color: #e8e8e8;
+  }
+  
+  /* Các option trong select */
+  .status-filter select option {
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hiệu ứng hover cho option */
+  .status-filter select option:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Điều chỉnh khoảng cách giữa các option */
+  select option {
+    padding: 10px;
+  }
+  
+  /* Nút xem chi tiết */
+  .MuiButton-root {
+    font-size: 14px;
+    background-color: #dd49a2;
+    color: white;
+    border-radius: 4px;
+    padding: 5px 10px;
+  }
+  
+  .MuiButton-root:hover {
+    background-color: #8f3e6f;
+  }
+  

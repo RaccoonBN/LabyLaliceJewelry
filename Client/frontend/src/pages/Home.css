@@ -62,12 +62,16 @@
     font-size: 2.5rem;
     color: #DE4BB1;
     margin-bottom: 10px;
+    text-align: center; /* Căn giữa */
+
   }
   
   p {
     font-size: 1.2rem;
     color: #555;
     margin-bottom: 20px;
+    text-align: center; /* Căn giữa */
+
   }
   
   /* Hiển thị sản phẩm */
@@ -112,12 +116,5 @@
   
   
   
-  /* Footer */
-  footer {
-    background-color: #333;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    font-size: 1rem;
-  }
+
   

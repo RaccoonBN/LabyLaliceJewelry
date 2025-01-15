@@ -1,0 +1,39 @@
+/* OrderTable.css */
+.status-cell {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-family: 'Josefin Sans', sans-serif;
+  }
+  
+  .status-dagiao {
+    background-color: #9dffb6;
+    color: #006400;
+  }
+  
+  .status-daguihang {
+    background-color: #ffec9d;
+    color: #ff8c00;
+  }
+  
+  .status-dangiao {
+    background-color: #bcf3fd;
+    color: #1e90ff;
+  }
+  
+  .status-datiepnhan {
+    background-color: #e1e1e1;
+    color: #808080;
+  }
+  
+  .status-default {
+    background-color: #B0B0B0;
+    color: #696969;
+  }
+  
+  .table-container {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  

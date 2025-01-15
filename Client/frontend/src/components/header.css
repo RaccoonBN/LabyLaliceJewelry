@@ -1,121 +1,187 @@
-/* Thanh đầu tiên */
+/* Thiết lập font cho toàn bộ trang */
 body, .header-first, .header-second {
-    font-family: 'Josefin Sans', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
 }
 
+/* Thanh đầu tiên */
 .header-first {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
-    padding: 10px 20px; /* Giãn rộng thêm cho thanh đầu tiên */
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ */
-    border-radius: 10px; /* Bo tròn góc cho toàn bộ header */
-    position: fixed; /* Cố định ở đầu trang */
-    top: 0; /* Đặt ở đầu trang */
-    left: 0;
-    width: 100%; /* Chiếm toàn bộ chiều rộng */
-    z-index: 1000; /* Đảm bảo header hiển thị phía trên các phần tử khác */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+  padding: 10px 20px; /* Giãn rộng thêm cho thanh đầu tiên */
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ */
+  position: fixed; /* Cố định ở đầu trang */
+  top: 0; /* Đặt ở đầu trang */
+  left: 0;
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  z-index: 1000; /* Đảm bảo header hiển thị phía trên các phần tử khác */
 }
-  
-  .search-container {
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 30px;
-    padding: 8px 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  }
-  
-  .search-icon {
-    font-size: 22px;
-    margin-left: 10px;
-    color: #DE4BB1;
-    transition: color 0.3s ease;
-  }
-  
-  .search-icon:hover {
-    color: #CC9FFF; /* Thêm hiệu ứng đổi màu khi hover */
-  }
-  
-  .search-container input {
-    padding: 10px;
-    border: none;
-    border-radius: 30px;
-    outline: none;
-    width: 120px;
-    height: 10px;
-    font-size: 16px;
-    box-shadow: none;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  
-  .logo img {
-    width: 170px; /* Tăng kích thước logo */
-    transition: transform 0.3s ease;
-  } 
-  
-  .icon {
-    font-size: 26px;
-    cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
-  }
-  .icons {
-    display: flex;
-    gap: 20px;
-    margin-right: 40px;
-    justify-content: flex-start; /* Đảm bảo các icon không bị đẩy sang bên phải */
-    align-items: center;
+
+/* Thanh tìm kiếm */
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  padding: 8px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
-  .icon:hover {
-    transform: scale(1.2); /* Phóng to icon khi hover */
-    color: #DE4BB1; /* Thêm hiệu ứng đổi màu khi hover */
-  }
-  
-  /* Thanh thứ hai */
-  .header-second {
-    display: flex;
-    justify-content: center;
-    background-color: white;
-    color: #DE4BB1;
-    padding: 12px 0;
-    font-weight: bold;
-    border-top: 1px solid #DE4BB1;
-    position: fixed; /* Cố định ở đầu trang */
-    top: 77px; /* Đặt thanh thứ hai ngay dưới thanh đầu tiên (có thể thay đổi giá trị tùy theo chiều cao của thanh đầu tiên) */
-    left: 0;
-    width: 100%; /* Chiếm toàn bộ chiều rộng */
-    z-index: 999; /* Đảm bảo thanh thứ hai hiển thị dưới thanh đầu tiên */
+
+.search-icon {
+  font-size: 22px;
+  margin-left: 10px;
+  color: #DE4BB1;
+  transition: color 0.3s ease;
 }
-  
-  .menu-item {
-    margin: 0 30px;
-    cursor: pointer;
-    position: relative;
-    font-size: 16px;
-    text-align: center;
-    padding: 5px;
-    transition: color 0.3s ease;
-  }
-  
-  .menu-item:hover {
-    color: #CC9FFF; /* Thay đổi màu khi hover */
-  }
-  
-  .menu-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #DE4BB1;
-    transition: width 0.3s ease;
-  }
-  
-  .menu-item:hover::after {
-    width: 100%; /* Thêm hiệu ứng đường gạch dưới khi hover */
-  }
-  
+
+.search-icon:hover {
+  color: #CC9FFF; /* Thêm hiệu ứng đổi màu khi hover */
+}
+
+.search-container input {
+  padding: 10px;
+  border: none;
+  border-radius: 30px;
+  outline: none;
+  width: 120px;
+  height: 10px;
+  font-size: 16px;
+  box-shadow: none;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Đặt một số kiểu dáng cho phần user icon */
+.user-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.icon {
+  font-size: 24px;
+}
+
+/* Định dạng cho dropdown khi mở */
+.user-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  width: 200px;
+}
+
+/* Định dạng cho các item trong dropdown */
+.dropdown-item {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.dropdown-item:hover {
+  color: #DE4BB1; /* Thêm hiệu ứng đổi màu khi hover */
+}
+
+
+/* Đặt icon cho mỗi mục trong dropdown */
+.dropdown-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Đảm bảo logo có kích thước phù hợp */
+.logo img {
+  width: 170px; /* Tăng kích thước logo */
+  transition: transform 0.3s ease;
+}
+
+/* Các icon trong thanh điều hướng */
+.icon {
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Hiệu ứng hover cho các icon */
+.icon:hover {
+  transform: scale(1.2); /* Phóng to icon khi hover */
+  color: #DE4BB1; /* Thêm hiệu ứng đổi màu khi hover */
+}
+
+/* Phân bố icon trong menu */
+.icons {
+  display: flex;
+  gap: 20px;
+  margin-right: 40px;
+  justify-content: flex-start; /* Đảm bảo các icon không bị đẩy sang bên phải */
+  align-items: center;
+}
+
+/* Thanh thứ hai */
+.header-second {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  color: #DE4BB1;
+  padding: 12px 0;
+  font-weight: bold;
+  border-top: 1px solid #DE4BB1;
+  position: fixed; /* Cố định ở đầu trang */
+  top: 77px; /* Đặt thanh thứ hai ngay dưới thanh đầu tiên */
+  left: 0;
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  z-index: 999; /* Đảm bảo thanh thứ hai hiển thị dưới thanh đầu tiên */
+}
+
+/* Menu items trong thanh thứ hai */
+.menu-item {
+  margin: 0 30px;
+  cursor: pointer;
+  position: relative;
+  font-size: 16px;
+  text-align: center;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.menu-item:hover {
+  color: #CC9FFF; /* Thay đổi màu khi hover */
+}
+
+/* Hiệu ứng đường gạch dưới cho menu-item khi hover */
+.menu-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #DE4BB1;
+  transition: width 0.3s ease;
+}
+
+.menu-item:hover::after {
+  width: 100%; /* Thêm hiệu ứng đường gạch dưới khi hover */
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Chiều rộng bằng với header */
+  max-width: 600px; /* Giới hạn chiều rộng nếu cần */
+}

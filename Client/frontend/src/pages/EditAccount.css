@@ -1,0 +1,83 @@
+/* Tổng quan container */
+.account-edit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f6f9;
+    padding: 0 15px; /* Thêm padding để tránh form bị sát viền màn hình */
+  }
+  
+  /* Form chỉnh sửa tài khoản */
+  .account-edit-form {
+    width: 100%;
+    max-width: 850px; 
+    padding: 20px;
+    margin-top: 50px; /* Khoảng cách với header */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tiêu đề form */
+  .form-title {
+    text-align: center;
+    font-size: 34px;
+    margin-bottom: 30px;
+    color: #DE4BB1;
+    font-weight: bold;
+  }
+  
+  /* Nhóm input nằm cùng hàng ngang */
+  .input-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  
+  /* Các input trong nhóm */
+  .input-field {
+    width: 48%; /* Mỗi trường chiếm 48% chiều rộng */
+  }
+  
+  /* Định dạng cho các trường TextField */
+  .MuiTextField-root {
+    width: 100%;
+  }
+  
+  /* Các trường TextField */
+  .input-group .MuiOutlinedInput-root {
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  /* Hiệu ứng hover */
+  .input-group .MuiOutlinedInput-root:hover {
+    border-color: #DE4BB1;
+  }
+  
+  /* Button "Lưu Thay Đổi" */
+  #save-changes-button {
+    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 12px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  #save-changes-button:hover {
+    background-color: #DE4BB1;
+  }
+  /* Định dạng cho icon chỉnh sửa (FaEdit) */
+.input-group .MuiIconButton-root {
+    color: #DE4BB1;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .input-group .MuiIconButton-root:hover {
+    color: #a93887;
+  }

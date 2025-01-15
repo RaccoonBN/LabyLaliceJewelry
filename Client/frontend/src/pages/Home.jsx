@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import Header from "../components/header";
-import Footer from "../components/footer";
 import ProductCard from "../components/productCard";
-import Slider from "react-slick"; // Import react-slick
+import Slider from "react-slick"; 
 import "./Home.css";
 
 // Import các banner
@@ -54,7 +52,6 @@ function Home() {
       productName: "Sản Phẩm 6",
       price: "10.000.000",
     },
-    // Add more products here if needed
   ];
 
   // Phân trang
@@ -84,7 +81,6 @@ function Home() {
 
   return (
     <div className="home">
-      <Header />
       <main className="home-content">
         {/* Slide Banner */}
         <div className="banner-slider">
@@ -133,7 +129,6 @@ function Home() {
           )}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

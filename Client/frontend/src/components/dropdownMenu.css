@@ -1,0 +1,42 @@
+.dropdown-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Chiều rộng bằng với header */
+    max-width: 600px; /* Giới hạn chiều rộng nếu cần */
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    gap: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f4f4f4;
+}
+
+.dropdown-image {
+    width: 120px; /* Kích thước hình chữ nhật */
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.dropdown-title {
+    font-size: 18px; /* Tiêu đề to hơn */
+    font-weight: bold;
+    color: #333;
+}

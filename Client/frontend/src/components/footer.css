@@ -1,151 +1,146 @@
 /* Cài đặt font cho toàn bộ footer */
 .footer {
-    font-family: 'Josefin Sans', sans-serif;
-    background: linear-gradient(90deg, #DE4BB1, #CC9FFF); /* Nền gradient */
-    color: white; /* Màu chữ trắng */
-    padding: 10px 0; /* Giãn cách cho footer */
-  }
-  
-  /* Cấu trúc tổng quan của footer */
-  .footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 10px 10px;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap; /* Cho phép các phần tử tự động xuống dòng nếu không đủ chỗ */
-  }
-  
-  /* Phía bên trái */
-  .footer-left {
-    flex: 1;
-    max-width: 1000px; /* Giới hạn chiều rộng */
-    margin-right: 30px;
-    padding-right: 30px;
-  }
-  
-  .logo-slogan img {
-    width: 350px; /* Resize logo */
-    margin-bottom: 15px;
-    transition: transform 0.3s ease;
-  }
-  
-  .logo-slogan p {
-    font-size: 20px;
-    font-weight: 500;
-    margin-top: 10px;
-    color: white;
-    margin-bottom: 100px;
-    font-style: italic;
-  }
-  
-  .contact-info p {
-    margin: 10px 0;
-    font-size: 27px;
-    display: flex;
-    align-items: center;
-    color: white;
+  font-family: 'Josefin Sans', sans-serif;
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF); /* Nền gradient */
+  color: white; /* Màu chữ trắng */
+  padding: 10px 0; /* Giãn cách cho footer */
+}
 
-  }
-  
-  .contact-info p svg {
-    margin-right: 10px;
-    font-size: 27px;
-    color: white;
-  }
-  
-  /* Trung tâm (Icon mạng xã hội) */
-  .footer-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    margin: 20px 0;
-    margin-top: 200px;
-  }
-  
-  .social-icons a {
-    font-size: 30px;
-    color: white;
-    margin: 10px;
-    transition: transform 0.3s ease, color 0.3s ease;
-  }
-  
-  .social-icons a:hover {
-    transform: scale(1.2); /* Phóng to icon khi hover */
-    color: #DE4BB1;
-  }
-  
-  /* Phía bên phải */
-  .footer-right {
-    flex: 1;
-    max-width: 450px; /* Giới hạn chiều rộng */
-    text-align: right;
-  }
-  
-  .footer-right h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-right: 150px;
-    margin-left: 50px;
-    margin-bottom: 1px;
-    white-space: nowrap; /* Đảm bảo chữ không bị xuống dòng */
+/* Cấu trúc tổng quan của footer */
+.footer__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap; /* Cho phép các phần tử tự động xuống dòng nếu không đủ chỗ */
+}
 
-    
-  }
-  
-  .store-info {
-    text-align: left;
-  }
-  
-  .store-image {
-    width: 100%;
-    max-width: 300px; /* Điều chỉnh kích thước hình ảnh cửa hàng */
-    margin-top: 10px;
-    margin-left: 50px;
-    border-radius: 10px;
-    max-height: 150px;
+/* Phía bên trái */
+.footer__left {
+  flex: 1;
+  max-width: 1000px; /* Giới hạn chiều rộng */
+  margin-right: 30px;
+  padding-right: 30px;
+}
 
-  }
-  
-  .store-address {
-    margin-left: 50px;
-    margin-top: 10px;
-    color: white;
-    font-size: 18px;
-    font-weight: 400;
-  }
-  
-  .google-map iframe {
-    border: 0;
-    border-radius: 10px;
-    margin-left: 50px;
-    margin-top: 1px;
-    max-width: 300px; /* Điều chỉnh kích thước hình ảnh cửa hàng */
-    max-height: 150px;
-  }
-  
-  /* Cải tiến thiết kế cho các màn hình nhỏ */
-  @media (max-width: 768px) {
-    .footer-content {
+.footer__logo-slogan img {
+  width: 350px; /* Resize logo */
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.footer__logo-slogan p {
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 10px;
+  color: white;
+  margin-bottom: 100px;
+  font-style: italic;
+}
+
+.footer__contact-info p {
+  margin: 10px 0;
+  font-size: 27px;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.footer__contact-info p svg {
+  margin-right: 10px;
+  font-size: 27px;
+  color: white;
+}
+
+/* Trung tâm (Icon mạng xã hội) */
+.footer__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  margin: 20px 0;
+  margin-top: 200px;
+}
+
+.footer__social-icons a {
+  font-size: 30px;
+  color: white;
+  margin: 10px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer__social-icons a:hover {
+  transform: scale(1.2); /* Phóng to icon khi hover */
+  color: #DE4BB1;
+}
+
+/* Phía bên phải */
+.footer__right {
+  flex: 1;
+  max-width: 450px; /* Giới hạn chiều rộng */
+  text-align: right;
+}
+
+.footer__right h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 150px;
+  margin-left: 50px;
+  margin-bottom: 1px;
+  white-space: nowrap; /* Đảm bảo chữ không bị xuống dòng */
+}
+
+.footer__store-info {
+  text-align: left;
+}
+
+.footer__store-image {
+  width: 100%;
+  max-width: 300px; /* Điều chỉnh kích thước hình ảnh cửa hàng */
+  margin-top: 10px;
+  margin-left: 50px;
+  border-radius: 10px;
+  max-height: 150px;
+}
+
+.footer__store-address {
+  margin-left: 10px;
+  margin-top: 10px;
+  color: white;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.footer__google-map iframe {
+  border: 0;
+  border-radius: 10px;
+  margin-left: 50px;
+  margin-top: 1px;
+  max-width: 300px; /* Điều chỉnh kích thước hình ảnh cửa hàng */
+  max-height: 150px;
+}
+
+/* Cải tiến thiết kế cho các màn hình nhỏ */
+@media (max-width: 768px) {
+  .footer__content {
       flex-direction: column;
       align-items: center;
-    }
-  
-    .footer-left, .footer-center, .footer-right {
+  }
+
+  .footer__left, .footer__center, .footer__right {
       max-width: 100%;
       margin: 10px 0;
       text-align: center;
-    }
-  
-    .footer-right h3 {
-      font-size: 18px;
-    }
-  
-    .store-image {
-      max-width: 200px;
-    }
   }
-  
+
+  .footer__right h3 {
+      font-size: 18px;
+  }
+
+  .footer__store-image {
+      max-width: 200px;
+  }
+}
