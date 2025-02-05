@@ -96,11 +96,9 @@ const Header = () => {
           }`}
           onClick={() => {
             handleSelectItem("products");
-            handleDropdownToggle("products");
           }}
         >
           SẢN PHẨM
-          {dropdownOpen === "products" && <DropdownMenu />}
         </div>
         <div
           className={`menu-item ${selectedItem === "news" ? "active" : ""}`}

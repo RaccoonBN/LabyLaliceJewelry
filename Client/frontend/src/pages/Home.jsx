@@ -7,47 +7,47 @@ import "./Home.css";
 import banner1 from "../assets/banner1.jpg";
 import banner2 from "../assets/banner2.jpg";
 import banner3 from "../assets/banner3.jpg";
-
+import demosp from "../assets/demosp.png"
 function Home() {
   const products = [
     {
       id: 1,
-      image: "https://via.placeholder.com/150",
+      image: demosp,
       collectionName: "Bộ Sưu Tập A",
       productName: "Sản Phẩm 1",
       price: "7.000.000",
     },
     {
       id: 2,
-      image: "https://via.placeholder.com/150",
+      image: demosp,
       collectionName: "Bộ Sưu Tập B",
       productName: "Sản Phẩm 2",
       price: "8.000.000",
     },
     {
       id: 3,
-      image: "https://via.placeholder.com/150",
+      image: demosp,
       collectionName: "Bộ Sưu Tập C",
       productName: "Sản Phẩm 3",
       price: "9.000.000",
     },
     {
       id: 4,
-      image: "https://via.placeholder.com/150",
+      image: demosp,
       collectionName: "Bộ Sưu Tập D",
       productName: "Sản Phẩm 4",
       price: "6.000.000",
     },
     {
       id: 5,
-      image: "https://via.placeholder.com/150",
+      image: demosp,
       collectionName: "Bộ Sưu Tập D",
       productName: "Sản Phẩm 5",
       price: "6.000.000",
     },
     {
       id: 6,
-      image: "https://via.placeholder.com/150",
+      image: demosp,
       collectionName: "Bộ Sưu Tập E",
       productName: "Sản Phẩm 6",
       price: "10.000.000",

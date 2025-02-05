@@ -6,8 +6,9 @@
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Chiều rộng bằng với header */
-    max-width: 600px; /* Giới hạn chiều rộng nếu cần */
+    width: 300%; /* Đặt chiều rộng tự động bằng với phần tử cha (header) */
+    position: absolute; /* Đảm bảo dropdown không bị ảnh hưởng bởi layout của các phần tử khác */
+    left: 0; /* Đặt dropdown căn trái để rộng bằng với phần tử cha */
 }
 
 .dropdown-item {
@@ -29,14 +30,14 @@
 }
 
 .dropdown-image {
-    width: 120px; /* Kích thước hình chữ nhật */
+    width: 120px;
     height: 80px;
     object-fit: cover;
     border-radius: 5px;
 }
 
 .dropdown-title {
-    font-size: 18px; /* Tiêu đề to hơn */
+    font-size: 18px;
     font-weight: bold;
     color: #333;
 }
