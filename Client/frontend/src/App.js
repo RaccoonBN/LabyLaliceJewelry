@@ -5,6 +5,7 @@ import Header from "./components/header";
 import Footer from "./components/footer"; 
 import OrderHistory from "./pages/OrderHistory"; 
 import EditAccount from "./pages/EditAccount"; 
+import Chatbot from "./components/chatbot";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
           <Route path="/order-history" element={<OrderHistory />} /> {/* Route cho Order History */}
           <Route path="/edit-account" element={<EditAccount />} /> {/* Route cho Edit Account */}
         </Routes>
-        
+        <Chatbot />
         <Footer />
       </div>
     </Router>

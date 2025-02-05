@@ -1,0 +1,128 @@
+/* Vị trí tổng thể */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+  
+/* Nút mở chatbot */
+.chatbot-button {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out, background-color 0.3s;
+}
+  
+.chatbot-button:hover {
+    background-color: #8a2e67;
+    transform: scale(1.1);
+}
+  
+/* Kích thước logo, làm tròn đẹp hơn */
+.chatbot-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+  
+/* Khung chat */
+.chatbot-box {
+    width: 320px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+  
+/* Header chatbot */
+.chatbot-header {
+    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+    color: white;
+    padding: 1px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.chatbot-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+  
+.chatbot-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+  
+/* Nội dung chat */
+.chatbot-messages {
+    height: 250px;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+  
+/* Tin nhắn */
+.chatbot-message {
+    max-width: 75%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+  
+.chatbot-message.user {
+    align-self: flex-end;
+    background: #DE4BB1;
+    color: white;
+}
+  
+.chatbot-message.bot {
+    align-self: flex-start;
+    background: #f1f1f1;
+}
+  
+/* Ô nhập tin nhắn */
+.chatbot-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 8px;
+}
+  
+.chatbot-textbox {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    font-size: 14px;
+}
+  
+.chatbot-send {
+    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+  
+.chatbot-send:hover {
+    background: #8a2e67;
+}
