@@ -1,7 +1,7 @@
 /* AboutUs.css */
 
 .app-container {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
   background-color: #fff;
   color: #5c5c5c;
 }
@@ -16,6 +16,7 @@
   flex-wrap: wrap;
   margin-bottom: 40px;
   align-items: flex-start; /* Align items to the top */
+  justify-content: space-between; /* Căn đều giữa hình ảnh và văn bản */
 }
 
 .section-image {
@@ -25,7 +26,10 @@
 }
 
 .section-image img {
-  width: 100%;
+  width: 100%; /* Giữ chiều rộng của ảnh phù hợp với container */
+  height: auto; /* Đảm bảo chiều cao tự động thay đổi để giữ tỷ lệ */
+  max-height: 600px; /* Giới hạn chiều cao của ảnh */
+  object-fit: cover; /* Làm cho ảnh phủ hết không gian mà không bị biến dạng */
   border-radius: 8px;
 }
 
@@ -33,13 +37,14 @@
   flex: 1;
   max-width: 45%; /* Ensure consistent alignment with image */
   margin-left: 0; /* Remove extra margin */
-  text-align: left; /* Align text to the left */
+  text-align: justify; /* Căn đều văn bản */
   padding-left: 20px; /* Added padding to align text */
+  line-height: 1.8; /* Tăng chiều cao dòng để văn bản dễ đọc hơn */
 }
 
 .section-text h2, .section-text h3 {
-  color: #ff69b4;
-  font-weight: bold;
+  color: #da3eab;
+  font-weight: 700; /* Đảm bảo tiêu đề in đậm hơn */
   margin-bottom: 10px;
 }
 
@@ -48,17 +53,19 @@
 }
 
 .section-text h2 {
-  font-size: 24px;
+  font-size: 28px; /* Tăng kích thước tiêu đề h2 */
 }
 
-.section-text p, .section-text p2 {
+.section-text p {
   font-size: 16px;
-  line-height: 1.8;
-  color: #7a7a7a;
+  color: #DE4BB1;
+  text-align: justify;
 }
 
 .section-text p2 {
   display: block;
+  font-size: 16px;
+  color: #DE4BB1;
 }
 
 /* Header and Footer Styles */

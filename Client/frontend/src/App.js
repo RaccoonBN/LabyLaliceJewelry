@@ -5,7 +5,10 @@ import Header from "./components/header";
 import Footer from "./components/footer"; 
 import OrderHistory from "./pages/OrderHistory"; 
 import EditAccount from "./pages/EditAccount"; 
-
+import AboutUs from "./pages/AboutUs"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Chatbot from "./components/chatbot";
 function App() {
   return (
     <Router> 
@@ -19,7 +22,6 @@ function App() {
           <Route path="/AboutUs" element={<AboutUs />} /> {/* Route cho AboutUs */}
           <Route path="/Login" element={<Login />} /> {/* Route cho Login */}
           <Route path="/Register" element={<Register />} /> {/* Route cho Register */}
-          <Route path="/Cart" element={<Cart />} /> {/* Route cho Cart */}
 
         </Routes>
         <Chatbot />

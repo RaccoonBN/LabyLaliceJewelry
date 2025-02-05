@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaSearch, FaHeart, FaShoppingCart, FaUser,FaCog, FaHistory, FaSignOutAlt } from "react-icons/fa";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import "./header.css";
 import logo from "../assets/logo.png";
 import DropdownMenu from "./dropdownMenu";
@@ -76,7 +76,7 @@ const Header = () => {
           className={`menu-item ${selectedItem === "about" ? "active" : ""}`}
           onClick={() => handleSelectItem("about")}
         >
-          VỀ CHÚNG TÔI
+        <Link to="/AboutUs">VỀ CHÚNG TÔI</Link>
         </div>
         <div
           className={`menu-item ${

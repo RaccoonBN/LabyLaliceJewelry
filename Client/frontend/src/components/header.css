@@ -168,7 +168,10 @@ body, .header-first, .header-second {
 .menu-item:hover::after {
   width: 100%; /* Thêm hiệu ứng đường gạch dưới khi hover */
 }
-
+.menu-item a {
+  text-decoration: none; /* Loại bỏ gạch chân mặc định của Link */
+  color: inherit; /* Đảm bảo rằng màu chữ được kế thừa từ parent */
+}
 /* Dropdown menu */
 .dropdown-menu {
   position: absolute;

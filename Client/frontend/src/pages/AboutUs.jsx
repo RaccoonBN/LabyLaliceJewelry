@@ -1,28 +1,26 @@
 
 import React from "react";
 import "./AboutUs.css";
-import Header from '../components/header'; 
-import Footer from '../components/footer'; 
-
+import us1 from "../assets/us1.png";
+import us2 from "../assets/us2.png";
 
 // Main Component
 const MainContent = () => {
   return (
     <div className="app-container">
-      <Header />
       <div className="main-container">
         <div className="section">
           <div className="section-image">
-            <img src="/abm1.jpg" alt="Jewelry Display" />
+              <img src={us1} alt="Ảnh 1" />
           </div>
           <div className="section-text">
             <h2 classname="text_titletitle">THIẾT KẾ ĐỘC QUYỀN TỪ HÀN QUỐC</h2>
             <p classnameclassname="text_descrip">
               Lấy tầm nhìn trở thành "Nhà bán lẻ trang sức dẫn đầu xu hướng",
-              trang sức Huy Thanh mang phong cách trẻ trung, hiện đại, liên tục
+              trang sức LabyLalice mang phong cách trẻ trung, hiện đại, liên tục
               cập nhật những xu hướng mới từ Hàn Quốc. Bộ sưu tập sản phẩm chủ lực
-              của LabyLaice Jewelry gồm có: Nhẫn cưới, Trang sức cưới và Trang sức
-              hiện đại cho nữ giới. Khách hàng sở hữu trang sức vàng từ LabyLaice
+              của LabyLalice Jewelry gồm có: Nhẫn cưới, Trang sức cưới và Trang sức
+              hiện đại cho nữ giới. Khách hàng sở hữu trang sức vàng từ LabyLalice
               Jewelry đồng thời sở hữu xu hướng mới nhất đến từ thế giới, được thể
               hiện bằng sản phẩm mang tính sáng tạo, đột phá trong thiết kế và công
               nghệ chế tác.
@@ -36,7 +34,7 @@ const MainContent = () => {
             <p classnameclassname="text_descrip">
               Mang trong mình sứ mệnh sẽ trở thành bạn đồng hành luôn thấu hiểu và
               trân trọng từng khoảnh khắc trong cuộc sống của khách hàng, slogan
-              của Huy Thanh Jewelry là "Tales of Happiness" (Câu chuyện của hạnh
+              của LabyLalice Jewelry là "Tales of Happiness" (Câu chuyện của hạnh
               phúc). Hạnh phúc, tình yêu, kỉ niệm... được hình thành trong sự gắng
               vàng - nguyên liệu quý có giá trị không bao giờ mai một để trang sức
               không chỉ bền đẹp, mà luôn gợi nhớ mỗi người từng dấu mốc đáng nhớ đã
@@ -55,11 +53,10 @@ const MainContent = () => {
             </p>
           </div>
           <div className="section-image">
-            <img src="/abm2.jpg" alt="Wedding Rings" />
+          <img src={us2} alt="Ảnh 1" />
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
