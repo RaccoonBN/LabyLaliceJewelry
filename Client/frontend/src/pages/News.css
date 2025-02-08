@@ -1,3 +1,6 @@
+body {
+    font-family: 'Josefin Sans', sans-serif;
+  }
 .news-container {
     max-width: 800px;
     margin: 40px auto;
@@ -9,19 +12,25 @@
 }
 
 .back-button {
-    background: #DE4BB1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 18px;
+    font-weight: bold;
     color: white;
+    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
     border: none;
-    padding: 10px 15px;
-    font-size: 16px;
+    border-radius: 8px;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
+    transition: all 0.3s ease;
+    font-family: 'Josefin Sans', sans-serif;
 
-.back-button:hover {
-    background: #b73c92;
-}
+  }
+  
+  .back-button:hover {
+    background: linear-gradient(90deg, #963378, #7348a3);
+  }
 
 .news-title {
     font-size: 28px;
