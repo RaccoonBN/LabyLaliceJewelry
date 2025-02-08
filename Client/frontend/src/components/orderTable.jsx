@@ -6,10 +6,34 @@ import './orderTable.css';  // Import CSS
 const OrderTable = ({ filter }) => {
   // Giả lập dữ liệu đơn hàng
   const orders = [
-    { id: 1, date: '2025-01-10', price: 500000, status: 'Đã Giao Hàng' },
-    { id: 2, date: '2025-01-12', price: 250000, status: 'Đã Gửi Hàng Đi' },
-    { id: 3, date: '2025-01-13', price: 300000, status: 'Đang Giao' },
-    { id: 4, date: '2025-01-14', price: 150000, status: 'Đã Tiếp Nhận' },
+    {
+      id: 1,
+      date: "2025-01-10",
+      price: 500000,
+      status: "Đã Giao Hàng",
+      items: [{ id: 101, name: "Nhẫn Kim Cương", image: "/images/ring.jpg", quantity: 1, price: 500000 }],
+    },
+    {
+      id: 2,
+      date: "2025-01-12",
+      price: 250000,
+      status: "Đã Gửi Hàng Đi",
+      items: [{ id: 102, name: "Dây Chuyền Vàng", image: "/images/necklace.jpg", quantity: 1, price: 250000 }],
+    },
+    {
+      id: 3,
+      date: "2025-01-13",
+      price: 300000,
+      status: "Đang Giao",
+      items: [{ id: 103, name: "Bông Tai Bạc", image: "/images/earring.jpg", quantity: 2, price: 150000 }],
+    },
+    {
+      id: 4,
+      date: "2025-01-14",
+      price: 150000,
+      status: "Đã Tiếp Nhận",
+      items: [{ id: 104, name: "Nhẫn Vàng", image: "/images/gold-ring.jpg", quantity: 1, price: 150000 }],
+    },
   ];
 
   // Lọc các đơn hàng theo trạng thái nếu có filter
@@ -57,11 +81,10 @@ const OrderTable = ({ filter }) => {
                 </span>
               </TableCell>
               <TableCell>
-                <Link to={`/order/${order.id}`} style={{ textDecoration: 'none' }}>
-                  <Button variant="contained" color="primary">
-                    Xem Chi Tiết
-                  </Button>
-                </Link>
+              <Link to={`/orders/${order.id}`} style={{ textDecoration: "none" }}>
+                  <Button variant="contained" color="primary">Xem Chi Tiết</Button>
+               </Link>
+
               </TableCell>
             </TableRow>
           ))}

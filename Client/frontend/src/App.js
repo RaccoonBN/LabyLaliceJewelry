@@ -13,6 +13,7 @@ import BlogPage from "./pages/Blog";
 import NewsDetail from "./pages/News";
 import AllProduct from "./pages/AllProduct";
 import ProductPage from "./pages/Product";
+import OrderDetail from "./pages/orderDetail";
 
 function App() {
   return (
@@ -31,7 +32,8 @@ function App() {
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/AllProduct" element={<AllProduct />} />
           <Route path="/product/:id" element={<ProductPage />} /> {/* Route chi tiết sản phẩm */}
-
+          <Route path="/orders/:id" element={<OrderDetail />} />
+    
         </Routes>
         <Chatbot />
         <Footer />

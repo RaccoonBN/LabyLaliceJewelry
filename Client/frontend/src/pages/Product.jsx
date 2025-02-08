@@ -27,17 +27,18 @@ const ProductPage = () => {
       {/* Phần đánh giá & bình luận */}
       <ReviewSection />
 
-      {/* Sản phẩm liên quan */}
-      <div className="related-products">
+        {/* Sản phẩm liên quan */}
+        <div className="related-products">
         <h2>Sản phẩm liên quan</h2>
         <div className="product-list">
-          {relatedProducts.map((item) => (
-            <Link to={`/product/${item.id}`} key={item.id} className="product-card">
-              <img src={item.image} alt={item.title} />
-              <p className="product-title">{item.title}</p>
-              <p className="price">{item.price.toLocaleString()} VND</p>
+            {relatedProducts.map((item) => (
+            <Link to={`/product/${item.id}`} key={item.id} className="related-product-card">
+                <img src={item.image} alt={item.title} />
+                <p className="related-product-title">{item.title}</p>
+                <p className="related-price">{item.price.toLocaleString()} VND</p>
             </Link>
-          ))}
+            ))}
+
         </div>
       </div>
     </div>
