@@ -11,6 +11,7 @@ import Register from "./pages/Register"
 import Chatbot from "./components/chatbot";
 import BlogPage from "./pages/Blog";
 import NewsDetail from "./pages/News";
+import AllProduct from "./pages/AllProduct";
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
           <Route path="/Register" element={<Register />} /> {/* Route cho Register */}
           <Route path="/BlogPage" element={<BlogPage />} /> {/* Route cho Blog */}
           <Route path="/news/:id" element={<NewsDetail />} />
-
+          <Route path="/AllProduct" element={<AllProduct />} />
 
         </Routes>
         <Chatbot />

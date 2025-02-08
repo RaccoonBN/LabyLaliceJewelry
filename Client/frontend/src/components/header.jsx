@@ -98,7 +98,7 @@ const Header = () => {
             handleSelectItem("products");
           }}
         >
-          SẢN PHẨM
+        <Link to="/AllProduct">SẢN PHẨM</Link>
         </div>
         <div
           className={`menu-item ${selectedItem === "news" ? "active" : ""}`}
