@@ -104,7 +104,7 @@ const Header = () => {
           className={`menu-item ${selectedItem === "news" ? "active" : ""}`}
           onClick={() => handleSelectItem("news")}
         >
-          BLOG TIN TỨC
+        <Link to="/BlogPage">BLOG TIN TỨC</Link>
         </div>
       </div>
     </header>

@@ -9,6 +9,9 @@ import AboutUs from "./pages/AboutUs"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Chatbot from "./components/chatbot";
+import BlogPage from "./pages/Blog";
+import NewsDetail from "./pages/News";
+
 function App() {
   return (
     <Router> 
@@ -22,6 +25,9 @@ function App() {
           <Route path="/AboutUs" element={<AboutUs />} /> {/* Route cho AboutUs */}
           <Route path="/Login" element={<Login />} /> {/* Route cho Login */}
           <Route path="/Register" element={<Register />} /> {/* Route cho Register */}
+          <Route path="/BlogPage" element={<BlogPage />} /> {/* Route cho Blog */}
+          <Route path="/news/:id" element={<NewsDetail />} />
+
 
         </Routes>
         <Chatbot />
