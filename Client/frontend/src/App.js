@@ -12,6 +12,7 @@ import Chatbot from "./components/chatbot";
 import BlogPage from "./pages/Blog";
 import NewsDetail from "./pages/News";
 import AllProduct from "./pages/AllProduct";
+import ProductPage from "./pages/Product";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/BlogPage" element={<BlogPage />} /> {/* Route cho Blog */}
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/AllProduct" element={<AllProduct />} />
+          <Route path="/product/:id" element={<ProductPage />} /> {/* Route chi tiết sản phẩm */}
 
         </Routes>
         <Chatbot />
