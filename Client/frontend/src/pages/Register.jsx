@@ -1,8 +1,8 @@
 import React from "react";
 import { FaUser, FaLock } from "react-icons/fa"; // Import các icon
-import "./Login.css";
+import "./Register.css";
 
-const Login = () => {
+const Register = () => {
   return (
     <div className="auth-container">
       <div className="auth-content">
@@ -32,4 +32,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
