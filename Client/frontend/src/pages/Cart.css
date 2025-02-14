@@ -1,0 +1,143 @@
+/* Định dạng tổng thể của giỏ hàng */
+.shopping-cart {
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: auto;
+  padding: 130px 20px; /* Thêm khoảng cách phía trên để không bị mất chữ */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tiêu đề giỏ hàng */
+.cart-title {
+  color: #d63384;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Bố cục chính */
+.cart-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Vùng danh sách sản phẩm */
+.cart-items-container {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.item-checkbox {
+  margin-right: 15px;
+}
+
+.item-image {
+  width: 80px;
+  height: 80px;
+  margin-right: 15px;
+}
+
+.item-details {
+  flex-grow: 1;
+}
+
+.item-collection {
+  font-size: 14px;
+  color: gray;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.item-price {
+  font-size: 16px;
+  color: #d63384;
+  font-weight: bold;
+}
+
+/* Điều chỉnh số lượng */
+.item-quantity {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-btn {
+  background-color: #fff;
+  border: 1px solid #d63384;
+  color: #d63384;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.quantity-input {
+  width: 40px;
+  text-align: center;
+  border: none;
+}
+
+/* Xóa sản phẩm */
+.remove-item {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* Tóm tắt đơn hàng */
+.order-summary {
+  width: 30%;
+  background-color: #fff5f8;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.order-subtotal, .order-shipping, .order-total {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.order-total {
+  font-weight: bold;
+  font-size: 18px;
+  color: #d63384;
+}
+
+.order-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.checkout-btn, .continue-btn {
+  background-color: #d63384;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.continue-btn {
+  background-color: #f8c6d0;
+  color: #d63384;
+}
