@@ -1,0 +1,132 @@
+/* Tổng thể */
+.blog-management {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(90deg, #de4bb1, #cc9fff);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+}
+  
+  /* Tiêu đề */
+  .blog-management h2 {
+    text-align: center;
+    font-size: 28px;
+  }
+  
+  /* Nút thêm bài viết */
+  .add-btn {
+        background: white;
+        color: #de4bb1;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+  
+  .add-btn:hover {
+    background: #d6d6d6;
+  }
+  
+  /* Danh sách bài viết */
+  .post-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  /* Card bài viết */
+  .post-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .post-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .post-card h3 {
+    font-size: 20px;
+    color: #8a2be2;
+  }
+  
+  .post-card p {
+    font-size: 14px;
+    color: #444;
+  }
+  
+  
+  /* Modal */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .save-btn, .cancel-btn {
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .save-btn {
+    background: #8a2be2;
+    color: white;
+  }
+  
+  .cancel-btn {
+    background: #ccc;
+  }
+  
+  /* Upload ảnh */
+  .upload-btn {
+    display: flex;
+    align-items: center;
+    background: #6a1bbd;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .image-preview {
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+  

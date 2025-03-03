@@ -1,0 +1,137 @@
+/* Container chính */
+.order-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(90deg, #de4bb1, #cc9fff);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+}
+  
+  /* Tiêu đề */
+  .order-title {
+    text-align: center;
+    font-size: 28px;
+  }
+  
+  /* Bảng đơn hàng */
+  .order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header */
+  .order-table th {
+    background: rgba(0, 0, 0, 0.15);
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    color: #222;
+  }
+  
+  /* Nội dung */
+  .order-table td {
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  /* Dòng xen kẽ */
+  .order-table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.85);
+  }
+  
+  /* Hiệu ứng hover */
+  .order-table tr:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Dropdown trạng thái */
+  .order-status-select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .order-status-select:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  .order-info-icon {
+    color: #de4bb1;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  .order-info-icon:hover {
+    color: #c5449e;
+  }
+  
+ /* Modal */
+.order-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .order-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 450px;
+    color: black; /* Đảm bảo chữ màu đen để đọc dễ hơn */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Hiệu ứng đổ bóng nhẹ */
+  }
+  
+  /* Bảng chi tiết */
+  .order-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .order-detail-table th {
+    background-color: #de4bb1; 
+    color: white; 
+    padding: 10px;
+  }
+  
+  .order-detail-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    color: black;
+  }
+  
+  /* Nút đóng */
+  .close-modal {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .close-modal:hover {
+    background: darkred;
+  }
+  

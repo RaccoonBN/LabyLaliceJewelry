@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Sidebar from "./components/sidebar";
+import Home from "./pages/home";
+import "./App.css"; 
+import UserManagement from "./pages/user";
+import BlogManagement from "./pages/blog";
+import OrderManagement from "./pages/order";
+import CategoryManagement from "./pages/category";
+import CollectionManagement from "./pages/collection";
+import ProductManagement from "./pages/product";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="app-container">
+        <Sidebar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route path="/users" element={<UserManagement />} />
+            <Route path="/blog" element={<BlogManagement />} />
+            <Route path="/orders" element={<OrderManagement />} />
+            <Route path="/categories" element={<CategoryManagement />} />
+            <Route path="/collections" element={<CollectionManagement />} />
+            <Route path="/products" element={<ProductManagement />} />
+
+            {/* Thêm các trang quản lý khác */}
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
