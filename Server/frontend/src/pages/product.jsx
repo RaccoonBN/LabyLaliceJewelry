@@ -148,6 +148,13 @@ const ProductManagement = () => {
             <form onSubmit={handleSave}>
               <input type="text" name="name" placeholder="Tên sản phẩm" defaultValue={editProduct?.name || ""} required />
               <input type="number" name="price" placeholder="Giá tiền" defaultValue={editProduct?.price || ""} required />
+              <textarea
+              name="description"
+              placeholder="Mô tả sản phẩm"
+              defaultValue={editProduct?.description || ""}
+              required
+            ></textarea>
+
               <select name="category" defaultValue={editProduct?.category || ""} required>
                 <option value="">Chọn danh mục</option>
                 <option value="Nhẫn">Nhẫn</option>

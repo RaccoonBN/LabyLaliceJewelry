@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./sidebar.css";
-import { FaBars, FaTimes, FaUsers, FaNewspaper, FaShoppingCart, FaList, FaGem, FaHome, FaBoxOpen } from "react-icons/fa";
+import { FaUsers, FaNewspaper, FaShoppingCart, FaList, FaGem, FaHome, FaBoxOpen } from "react-icons/fa";
 import logo from "../assets/logo.png";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   return (
-    <aside className={`sidebar ${isOpen ? "open" : "closed"}`}>
-      <button className="toggle-btn" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <FaTimes /> : <FaBars />}
-      </button>
-
+    <aside 
+      className={`sidebar ${isOpen ? "open" : "closed"}`}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
       <div className="sidebar-header">
         <img src={logo} alt="Logo" className="sidebar-logo" />
         {isOpen && <h2 className="sidebar-title">Jewelry Admin</h2>}

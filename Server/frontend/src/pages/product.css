@@ -98,59 +98,129 @@
 .delete-button {
     color: #dc3545;
 }
-
+/* Overlay nền mờ */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5); /* Màu nền tối mờ */
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* Hộp modal */
+  .modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     text-align: center;
-    width: 350px;
-}
-
-.modal-content input {
+    position: relative;
+    animation: slideIn 0.3s ease-in-out;
+  }
+  
+  /* Tiêu đề */
+  .modal-content h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  /* Input fields */
+  .modal-content input,
+  .modal-content select {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
     border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+  }
+  
+  .modal-content input:focus,
+  .modal-content select:focus {
+    border-color: #de4bb1;
+  }
+  /* Trường nhập mô tả sản phẩm */
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+    min-height: 100px; /* Chiều cao tối thiểu */
+    resize: vertical; /* Cho phép kéo dãn theo chiều dọc */
 }
 
-.modal-actions {
+/* Hiệu ứng khi focus */
+.modal-content textarea:focus {
+    border-color: #de4bb1;
+}
+
+  /* Nút hành động */
+  .modal-actions {
     display: flex;
-    justify-content: space-around;
-}
-
-.save-button, .close-button {
-    padding: 8px 12px;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  /* Nút Lưu */
+  .save-button {
+    background: #de4bb1;
+    color: #fff;
     border: none;
+    padding: 10px 20px;
+    font-size: 16px;
     border-radius: 6px;
     cursor: pointer;
-    color: white;
-}
-
-.save-button {
-    background-color: #28a745;
-}
-
-.close-button {
-    background-color: #dc3545;
-}
-
-.save-button:hover, .close-button:hover {
-    opacity: 0.8;
-}
+    transition: 0.3s ease;
+  }
+  
+  .save-button:hover {
+    background: #c23697;
+    transform: scale(1.05);
+  }
+  
+  /* Nút Hủy */
+  .close-button {
+    background: #ccc;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .close-button:hover {
+    background: #b3b3b3;
+    transform: scale(1.05);
+  }
+  
+  /* Hiệu ứng xuất hiện */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
 .pagination {
     display: flex;
     justify-content: center;

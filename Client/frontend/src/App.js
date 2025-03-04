@@ -14,7 +14,8 @@ import NewsDetail from "./pages/News";
 import AllProduct from "./pages/AllProduct";
 import ProductPage from "./pages/Product";
 import OrderDetail from "./pages/orderDetail";
-
+import Cart from "./pages/Cart";
+import Order from "./pages/Order";
 function App() {
   return (
     <Router> 
@@ -33,7 +34,9 @@ function App() {
           <Route path="/AllProduct" element={<AllProduct />} />
           <Route path="/product/:id" element={<ProductPage />} /> {/* Route chi tiết sản phẩm */}
           <Route path="/orders/:id" element={<OrderDetail />} />
-    
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/order" element={<Order />} />
+
         </Routes>
         <Chatbot />
         <Footer />

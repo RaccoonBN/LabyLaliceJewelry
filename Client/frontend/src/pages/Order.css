@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&display=swap');
+
+.order-page {
+    max-width: 600px;
+    margin: 150px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.order-page__title {
+    text-align: center;
+    color: #c42b90;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.order-page__form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.order-page__form input:focus {
+    border-color: #c42b90;
+    outline: none;
+    box-shadow: 0 0 5px rgba(196, 43, 144, 0.5);
+}
+
+/* Thiết kế phần radio đẹp hơn */
+.order-page__payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.order-page__payment-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #c42b90;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    background: #fff;
+}
+
+.order-page__payment-option:hover {
+    background: rgba(196, 43, 144, 0.1);
+}
+
+/* Định dạng radio button đồng đều */
+.order-page__payment-option input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #c42b90;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.order-page__payment-option input[type="radio"]:checked {
+    background-color: #c42b90;
+    border-color: #c42b90;
+}
+
+.order-page__payment-option input[type="radio"]::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.order-page__payment-option input[type="radio"]:checked::after {
+    display: block;
+}
+
+.order-page__payment-option img {
+    width: 30px;
+    height: auto;
+}
+
+.order-page__summary {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(196, 43, 144, 0.05);
+    border-radius: 8px;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.order-table th, .order-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-table th {
+    background: #c42b90;
+    color: #fff;
+}
+
+.order-table tr:nth-child(even) {
+    background: rgba(196, 43, 144, 0.05);
+}
+
+.order-page__button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    background: #c42b90;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.order-page__button:hover {
+    background: #a82375;
+}

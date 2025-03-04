@@ -41,7 +41,7 @@ const Header = () => {
         </div>
         <div className="icons">
           <FaHeart className="icon" />
-          <FaShoppingCart className="icon" />
+          <FaShoppingCart className="icon" onClick={() => navigate("/cart")} />
           <div className="user-icon">
         <FaUser className="icon" onClick={handleUserIconClick} />
         {isUserDropdownOpen && (
