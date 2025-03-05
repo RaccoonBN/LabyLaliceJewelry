@@ -1,22 +1,14 @@
-const express = require("express");
-const db = require("./db"); 
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./db'); // Import file kết nối MySQL
 
 const app = express();
 const PORT = 3000;
 
-// API thêm dữ liệu vào Firestore
-app.get("/add-data", async (req, res) => {
-  try {
-    const docRef = db.collection("test").add({
-      message: "Hello Firestore!"
-    });
-    res.send("🎉 Dữ liệu đã thêm vào Firestore!");
-  } catch (error) {
-    res.status(500).send("❌ Lỗi Firestore: " + error.message);
-  }
-});
+// Middleware để xử lý JSON
+app.use(bodyParser.json());
 
-// Khởi động server
+// Chạy server
 app.listen(PORT, () => {
-  console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
+    console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
 });

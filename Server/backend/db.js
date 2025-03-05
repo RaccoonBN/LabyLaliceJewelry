@@ -1,11 +1,20 @@
-const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountKey.json"); 
+const mysql = require('mysql2');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+// Cấu hình kết nối MySQL trên XAMPP
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',        // User mặc định của XAMPP
+    password: '',        // Không có mật khẩu
+    database: 'labylalice_jewelry', // Tên database của bạn
 });
 
-const db = admin.firestore();
-console.log("🔥 Firestore đã kết nối thành công!");
+// Kết nối MySQL
+connection.connect(err => {
+    if (err) {
+        console.error('❌ Lỗi kết nối MySQL:', err);
+        return;
+    }
+    console.log('✅ Kết nối MySQL thành công!');
+});
 
-module.exports = { db, admin }; // Export cả db và admin
+module.exports = connection;
