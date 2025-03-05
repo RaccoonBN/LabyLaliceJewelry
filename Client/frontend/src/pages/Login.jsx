@@ -1,6 +1,7 @@
 import React from "react";
-import { FaUser, FaLock } from "react-icons/fa"; // Import các icon
+import { FaEnvelope, FaLock } from "react-icons/fa"; // Icon cho email và mật khẩu
 import "./Login.css";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
@@ -11,14 +12,16 @@ const Login = () => {
           <h2 className="text_title_login">Đăng Nhập</h2>
           <div className="auth-form">
             <div className="auth-input">
-              <FaUser className="input-icon" />
-              <input type="text" placeholder="Tên đăng nhập" />
+              <FaEnvelope className="input-icon" />
+              <input type="email" placeholder="Email" />
             </div>
             <div className="auth-input">
               <FaLock className="input-icon" />
               <input type="password" placeholder="Mật khẩu" />
             </div>
-            <p className="auth-link">Chưa có tài khoản? Đăng ký ngay</p>
+            <p className="auth-link">
+              Chưa có tài khoản? <Link to="/Register">Đăng ký ngay</Link>
+            </p>
             <button className="auth-button">Đăng Nhập</button>
           </div>
         </div>
