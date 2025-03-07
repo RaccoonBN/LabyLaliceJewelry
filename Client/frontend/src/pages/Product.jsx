@@ -1,44 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ProductDetail from "../components/ProductDetail";
 import ReviewSection from "../components/Review";
 import "./Product.css";
-import demosp from "../assets/demosp.png";
-
-// Danh sách sản phẩm
-const products = [
-  { id: 1, image: demosp, title: "Nhẫn Kim Cương", price: 5000000, description: "Chiếc nhẫn kim cương sang trọng, phù hợp với các sự kiện quan trọng." },
-  { id: 2, image: "necklace.jpg", title: "Dây Chuyền Vàng", price: 7000000, description: "Dây chuyền vàng 18K cao cấp, sang trọng và quý phái." },
-  { id: 3, image: "earring.jpg", title: "Bông Tai Bạc", price: 2000000, description: "Bông tai bạc 925 thanh lịch, phù hợp với mọi phong cách." },
-  { id: 4, image: "ring.jpg", title: "Nhẫn Vàng", price: 4000000, description: "Nhẫn vàng 14K sang trọng, biểu tượng của tình yêu vĩnh cửu." },
-];
+import axios from "axios";
 
 const ProductPage = () => {
   const { id } = useParams(); // Lấy ID từ URL
-  const productId = parseInt(id) || 1; // Chuyển ID từ string sang số
-  const product = products.find((p) => p.id === productId) || products[0]; // Tìm sản phẩm theo ID
-  const relatedProducts = products.filter((p) => p.id !== productId); // Lọc sản phẩm liên quan
+  const [product, setProduct] = useState(null); // Sản phẩm
+  const [relatedProducts, setRelatedProducts] = useState([]); // Sản phẩm liên quan
+  const [loading, setLoading] = useState(true); // Trạng thái loading
+  const [error, setError] = useState(null); // Lỗi (nếu có)
+
+  useEffect(() => {
+    // Gọi API để lấy sản phẩm theo ID và sản phẩm liên quan
+    const fetchProductData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/products/${id}`);
+        setProduct(response.data.product);
+        setRelatedProducts(response.data.relatedProducts);
+        setLoading(false);
+      } catch (error) {
+        setError("Có lỗi xảy ra khi tải dữ liệu sản phẩm.");
+        setLoading(false);
+      }
+    };
+
+    fetchProductData();
+  }, [id]);
+
+  if (loading) return <div>Đang tải...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>
       {/* Thông tin chi tiết sản phẩm */}
-      <ProductDetail product={product} />
+      {product && <ProductDetail product={product} />}
 
       {/* Phần đánh giá & bình luận */}
       <ReviewSection />
 
-        {/* Sản phẩm liên quan */}
-        <div className="related-products">
+      {/* Sản phẩm liên quan */}
+      <div className="related-products">
         <h2>Sản phẩm liên quan</h2>
         <div className="product-list">
-            {relatedProducts.map((item) => (
+          {relatedProducts.map((item) => (
             <Link to={`/product/${item.id}`} key={item.id} className="related-product-card">
-                <img src={item.image} alt={item.title} />
-                <p className="related-product-title">{item.title}</p>
-                <p className="related-price">{item.price.toLocaleString()} VND</p>
+              <img src={item.image} alt={item.name} />
+              <p className="related-product-title">{item.name}</p>
+              <p className="related-price">{item.price.toLocaleString()} VND</p>
             </Link>
-            ))}
-
+          ))}
         </div>
       </div>
     </div>
