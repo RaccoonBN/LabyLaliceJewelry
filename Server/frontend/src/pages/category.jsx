@@ -94,6 +94,7 @@ const CategoryManagement = () => {
           <tr>
             <th>ID</th>
             <th>Tên Danh Mục</th>
+            <th>Số lượng sản phẩm</th> {/* Thêm cột số lượng sản phẩm */}
             <th>Hành Động</th>
           </tr>
         </thead>
@@ -102,6 +103,7 @@ const CategoryManagement = () => {
             <tr key={category.id}>
               <td>{category.id}</td>
               <td>{category.name}</td>
+              <td>{category.product_count || 0}</td> {/* Hiển thị số lượng sản phẩm */}
               <td>
                 <button className="icon-button edit-button" onClick={() => openModal(category)}>
                   <FaEdit />

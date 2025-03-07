@@ -76,6 +76,7 @@ const CollectionManagement = () => {
             <th>ID</th>
             <th>Tên Bộ Sưu Tập</th>
             <th>Mô Tả</th>
+            <th>Số lượng sản phẩm</th>
             <th>Hành Động</th>
           </tr>
         </thead>
@@ -85,6 +86,7 @@ const CollectionManagement = () => {
               <td>{collection.id}</td>
               <td>{collection.name}</td>
               <td>{collection.description}</td>
+              <td>{collection.product_count}</td> {/* Hiển thị số lượng sản phẩm */}
               <td>
                 <button className="icon-button edit-button" onClick={() => openModal(collection)}>
                   <FaEdit />

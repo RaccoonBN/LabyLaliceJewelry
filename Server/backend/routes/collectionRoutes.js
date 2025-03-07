@@ -2,15 +2,21 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// Lấy danh sách bộ sưu tập
+// Lấy danh sách bộ sưu tập cùng số lượng sản phẩm
 router.get("/", (req, res) => {
-  db.query("SELECT * FROM collections ORDER BY id DESC", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(results);
+    const sql = `
+      SELECT c.id, c.name, c.description, 
+             (SELECT COUNT(*) FROM products p WHERE p.collection_id = c.id) AS product_count
+      FROM collections c
+    `;
+  
+    db.query(sql, (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: "Lỗi truy vấn CSDL" });
+      }
+      res.json(results);
+    });
   });
-});
 
 // Thêm bộ sưu tập mới
 router.post("/", (req, res) => {
@@ -58,5 +64,7 @@ router.delete("/:id", (req, res) => {
     res.json({ message: "Xóa thành công" });
   });
 });
+
+
 
 module.exports = router;

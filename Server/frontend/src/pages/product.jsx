@@ -1,20 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./product.css";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import demosp from "../assets/demosp.png"; // Ảnh mặc định
 
 const ProductManagement = () => {
-  // Danh sách sản phẩm giả lập
-  const [products, setProducts] = useState(Array.from({ length: 50 }, (_, i) => ({
-    id: i + 1,
-    name: `Sản phẩm ${i + 1}`,
-    collection: i % 2 === 0 ? "Luxury" : "Classic",
-    category: i % 2 === 0 ? "Nhẫn" : "Dây chuyền",
-    price: Math.floor(Math.random() * 10000000) + 5000000,
-    image: demosp,
-    description: `Mô tả sản phẩm ${i + 1}`,
-    createdAt: new Date().getTime() - i * 1000000, // Giả lập thời gian tạo
-  })));
 
   // Trạng thái modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,62 +15,121 @@ const ProductManagement = () => {
   const productsPerPage = 20;
 
   // Bộ lọc & Sắp xếp
+  const [categories, setCategories] = useState([]);
+  const [collections, setCollections] = useState([]);
+  const [products, setProducts] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState("");
   const [collectionFilter, setCollectionFilter] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  // Mở modal (thêm hoặc sửa)
+  // Gọi API lấy danh mục & bộ sưu tập
+  useEffect(() => {
+    axios.get("http://localhost:4000/categories").then((res) => setCategories(res.data));
+    axios.get("http://localhost:4000/collections").then((res) => setCollections(res.data));
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get("http://localhost:4000/product");
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Lỗi khi tải sản phẩm:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/product/product/${id}`);
+      setProducts(products.filter((product) => product.id !== id));
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+    }
+  };
+
   const openModal = (product = null) => {
     setEditProduct(product);
     setIsModalOpen(true);
+    setImagePreview(product?.image ? `http://localhost:4000/product/uploads/${product.image}` : null);
   };
 
-  // Đóng modal
   const closeModal = () => {
     setIsModalOpen(false);
     setEditProduct(null);
+    setSelectedImage(null);
+    setImagePreview(null);
   };
 
-  // Xóa sản phẩm
-  const handleDelete = (id) => {
-    setProducts(products.filter((product) => product.id !== id));
-  };
-
-  // Lưu sản phẩm (Thêm hoặc sửa)
-  const handleSave = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const file = formData.get("image");
-
-    const newProduct = {
-      id: editProduct ? editProduct.id : Date.now(),
-      name: formData.get("name"),
-      category: formData.get("category"),
-      collection: formData.get("collection"),
-      price: Number(formData.get("price")),
-      description: formData.get("description"),
-      image: file && file.size > 0 ? URL.createObjectURL(file) : editProduct?.image || demosp,
-      createdAt: editProduct ? editProduct.createdAt : new Date().getTime(),
-    };
-
-    if (editProduct) {
-      setProducts(products.map((p) => (p.id === editProduct.id ? newProduct : p)));
-    } else {
-      setProducts([...products, newProduct]);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setImagePreview(URL.createObjectURL(file));
     }
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    formData.append("name", e.target.name.value);
+    formData.append("category_id", e.target.category.value);
+    formData.append("collection_id", e.target.collection.value);
+    formData.append("price", Number(e.target.price.value));
+    formData.append("stock", Number(e.target.stock.value));
+    formData.append("description", e.target.description.value);
+
+    if (selectedImage) {
+      formData.append("image", selectedImage);
+    }
+
+    try {
+      if (editProduct) {
+        await axios.put(`http://localhost:4000/product/product/${editProduct.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+        await axios.post("http://localhost:4000/product/product", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+      fetchProducts();
+    } catch (error) {
+      console.error("Lỗi khi lưu sản phẩm:", error);
+    }
+
     closeModal();
   };
 
-  // Lọc & Sắp xếp sản phẩm
   const filteredProducts = products
-    .filter((product) => (categoryFilter ? product.category === categoryFilter : true))
-    .filter((product) => (collectionFilter ? product.collection === collectionFilter : true))
-    .sort((a, b) => {
-      if (sortOrder === "newest") return b.createdAt - a.createdAt;
-      if (sortOrder === "priceAsc") return a.price - b.price;
-      if (sortOrder === "priceDesc") return b.price - a.price;
-      return 0;
-    });
+  .filter((product) => {
+    // Kiểm tra kiểu dữ liệu trước khi so sánh
+    const productCategoryId = Number(product.category_id);  
+    const productCollectionId = Number(product.collection_id);
+    const selectedCategoryId = categoryFilter ? Number(categoryFilter) : undefined;
+    const selectedCollectionId = collectionFilter ? Number(collectionFilter) : undefined;
+    
+
+    if (selectedCategoryId !== undefined && productCategoryId !== selectedCategoryId) {
+      return false;
+    }
+    if (selectedCollectionId !== undefined && productCollectionId !== selectedCollectionId) {
+      return false;
+    }
+    
+
+    return true;
+  })
+  .sort((a, b) => {
+    if (sortOrder === "newest") return new Date(b.created_at) - new Date(a.created_at);
+    if (sortOrder === "priceAsc") return a.price - b.price;
+    if (sortOrder === "priceDesc") return b.price - a.price;
+    return 0;
+  });
+
+
 
   // Phân trang
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -94,18 +143,24 @@ const ProductManagement = () => {
         <FaPlus /> Thêm Sản Phẩm
       </button>
 
-      {/* Bộ lọc & Sắp xếp */}
+   {/* Bộ lọc & Sắp xếp */}
       <div className="filters">
         <select onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter}>
           <option value="">Tất cả danh mục</option>
-          <option value="Nhẫn">Nhẫn</option>
-          <option value="Dây chuyền">Dây chuyền</option>
+          {categories.map((category) => (
+          <option key={category.id} value={category.id}>
+            {category.name}
+          </option>
+        ))}
         </select>
 
         <select onChange={(e) => setCollectionFilter(e.target.value)} value={collectionFilter}>
           <option value="">Tất cả bộ sưu tập</option>
-          <option value="Luxury">Luxury</option>
-          <option value="Classic">Classic</option>
+          {collections.map((collection) => (
+            <option key={collection.id} value={collection.id}>
+              {collection.name} 
+            </option>
+          ))}
         </select>
 
         <select onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
@@ -115,14 +170,24 @@ const ProductManagement = () => {
         </select>
       </div>
 
-      {/* Danh sách sản phẩm */}
-      <div className="product-list">
-        {currentProducts.map((product) => (
+
+           {/* Danh sách sản phẩm */}
+           <div className="product-list">
+        {products.map((product) => (
           <div key={product.id} className="product-card">
-            <img src={product.image} alt={product.name} className="product-image" />
+            <img
+            src={product.image ? product.image : demosp}
+            alt={product.name}
+            className="product-image"
+            />
             <h3 className="product-name">{product.name}</h3>
-            <p className="product-category">{product.category} - {product.collection}</p>
-            <p className="product-price">{product.price.toLocaleString("vi-VN")} VND</p>
+            <p className="product-category">
+            {product.category_name} - {product.collection_name}
+           </p>
+            <p className="product-price">
+            {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(product.price))}
+          </p>
+            <p className="product-stock">Số lượng: {product.stock}</p>
             <div className="product-actions">
               <button className="edit-button" onClick={() => openModal(product)}><FaEdit /></button>
               <button className="delete-button" onClick={() => handleDelete(product.id)}><FaTrash /></button>
@@ -146,28 +211,61 @@ const ProductManagement = () => {
           <div className="modal-content">
             <h3>{editProduct ? "Sửa Sản Phẩm" : "Thêm Sản Phẩm"}</h3>
             <form onSubmit={handleSave}>
-              <input type="text" name="name" placeholder="Tên sản phẩm" defaultValue={editProduct?.name || ""} required />
-              <input type="number" name="price" placeholder="Giá tiền" defaultValue={editProduct?.price || ""} required />
+              <input
+                type="text"
+                name="name"
+                placeholder="Tên sản phẩm"
+                defaultValue={editProduct?.name || ""}
+                required
+              />
+              <input
+                type="number"
+                name="price"
+                placeholder="Giá tiền"
+                defaultValue={editProduct?.price || ""}
+                required
+              />
+              <input
+                type="number"
+                name="stock"
+                placeholder="Số lượng tồn kho"
+                defaultValue={editProduct?.stock || ""}
+                required
+              />
               <textarea
-              name="description"
-              placeholder="Mô tả sản phẩm"
-              defaultValue={editProduct?.description || ""}
-              required
-            ></textarea>
+                name="description"
+                placeholder="Mô tả sản phẩm"
+                defaultValue={editProduct?.description || ""}
+                required
+              ></textarea>
 
-              <select name="category" defaultValue={editProduct?.category || ""} required>
+              <select name="category" defaultValue={editProduct?.category_id || ""} required>
                 <option value="">Chọn danh mục</option>
-                <option value="Nhẫn">Nhẫn</option>
-                <option value="Dây chuyền">Dây chuyền</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
-              
-              <select name="collection" defaultValue={editProduct?.collection || ""} required>
+
+              <select name="collection" defaultValue={editProduct?.collection_id || ""} required>
                 <option value="">Chọn bộ sưu tập</option>
-                <option value="Luxury">Luxury</option>
-                <option value="Classic">Classic</option>
+                {collections.map((collection) => (
+                  <option key={collection.id} value={collection.id}>
+                    {collection.name}
+                  </option>
+                ))}
               </select>
-              
-              <input type="file" name="image" accept="image/*" />
+
+
+              {/* Hiển thị ảnh preview */}
+              {imagePreview && (
+                <img src={imagePreview} alt="Ảnh sản phẩm" className="image-preview" />
+              )}
+
+              {/* Upload ảnh */}
+              <input type="file" name="image" accept="image/*" onChange={handleImageChange} />
+
               <div className="modal-actions">
                 <button type="submit" className="save-button">Lưu</button>
                 <button type="button" className="close-button" onClick={closeModal}>Hủy</button>
@@ -175,6 +273,7 @@ const ProductManagement = () => {
             </form>
           </div>
         </div>
+
       )}
     </div>
   );

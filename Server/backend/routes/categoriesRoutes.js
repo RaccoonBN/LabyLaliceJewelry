@@ -2,15 +2,20 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// Lấy danh sách danh mục
 router.get("/", (req, res) => {
-  db.query("SELECT * FROM categories", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(results);
+    db.query(`
+      SELECT categories.*, COUNT(products.id) AS product_count
+      FROM categories
+      LEFT JOIN products ON categories.id = products.category_id
+      GROUP BY categories.id
+    `, (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json(results);
+    });
   });
-});
+  
 
 // Thêm danh mục mới
 router.post("/", (req, res) => {
