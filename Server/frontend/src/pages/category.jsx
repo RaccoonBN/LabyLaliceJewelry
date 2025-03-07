@@ -1,20 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./category.css";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 
-const CategoryManagement = () => {
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Nhẫn", productCount: 10 },
-    { id: 2, name: "Dây chuyền", productCount: 15 },
-    { id: 3, name: "Bông tai", productCount: 8 },
-  ]);
+const API_URL = "http://localhost:4000/categories"; 
 
+const CategoryManagement = () => {
+  const [categories, setCategories] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryName, setCategoryName] = useState("");
 
-  // Mở modal cho thêm/sửa
+  // Lấy danh mục từ backend
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Lỗi lấy danh mục:", error);
+    }
+  };
+
+  // Mở modal
   const openModal = (category = null) => {
     setIsEditing(!!category);
     setSelectedCategory(category);
@@ -29,27 +41,40 @@ const CategoryManagement = () => {
     setCategoryName("");
   };
 
-  // Lưu danh mục (thêm/sửa)
-  const saveCategory = () => {
+  // Lưu danh mục (Thêm/Sửa)
+  const saveCategory = async () => {
     if (categoryName.trim() === "") return;
 
-    if (isEditing) {
-      setCategories(
-        categories.map((cat) =>
-          cat.id === selectedCategory.id ? { ...cat, name: categoryName } : cat
-        )
-      );
-    } else {
-      const newId = categories.length ? categories[categories.length - 1].id + 1 : 1;
-      setCategories([...categories, { id: newId, name: categoryName, productCount: 0 }]);
-    }
+    try {
+      if (isEditing) {
+        await fetch(`${API_URL}/${selectedCategory.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: categoryName }),
+        });
+      } else {
+        await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: categoryName }),
+        });
+      }
 
-    closeModal();
+      fetchCategories(); // Cập nhật lại danh sách sau khi lưu
+      closeModal();
+    } catch (error) {
+      console.error("Lỗi khi lưu danh mục:", error);
+    }
   };
 
   // Xóa danh mục
-  const deleteCategory = (id) => {
-    setCategories(categories.filter((cat) => cat.id !== id));
+  const deleteCategory = async (id) => {
+    try {
+      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      fetchCategories(); // Cập nhật lại danh sách
+    } catch (error) {
+      console.error("Lỗi khi xóa danh mục:", error);
+    }
   };
 
   return (
@@ -69,7 +94,6 @@ const CategoryManagement = () => {
           <tr>
             <th>ID</th>
             <th>Tên Danh Mục</th>
-            <th>Số Lượng Sản Phẩm</th>
             <th>Hành Động</th>
           </tr>
         </thead>
@@ -78,7 +102,6 @@ const CategoryManagement = () => {
             <tr key={category.id}>
               <td>{category.id}</td>
               <td>{category.name}</td>
-              <td>{category.productCount}</td>
               <td>
                 <button className="icon-button edit-button" onClick={() => openModal(category)}>
                   <FaEdit />

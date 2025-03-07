@@ -1,40 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./user.css";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const UserManagement = () => {
-  // Danh sách người dùng giả lập
-  const [users, setUsers] = useState([
-    { id: 1, name: "Nguyễn Văn A", email: "a@gmail.com", password: "123456" },
-    { id: 2, name: "Trần Thị B", email: "b@gmail.com", password: "abcdef" },
-    { id: 3, name: "Lê Văn C", email: "c@gmail.com", password: "qwerty" },
-  ]);
+const API_URL = "http://localhost:4000/users"; // API backend
 
-  // Trạng thái chỉnh sửa
+const UserManagement = () => {
+  const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedPassword, setEditedPassword] = useState("");
 
+  // Lấy danh sách người dùng từ API
+  useEffect(() => {
+    axios.get(API_URL)
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.error("Lỗi lấy dữ liệu:", error);
+      });
+  }, []);
+
   // Hàm mở modal sửa
   const handleEdit = (user) => {
     setEditingUser(user);
-    setEditedName(user.name);
+    setEditedName(user.fullname);
     setEditedEmail(user.email);
     setEditedPassword(user.password);
   };
 
-  // Hàm lưu chỉnh sửa
+  // Hàm lưu chỉnh sửa vào database
   const handleSave = () => {
-    setUsers(users.map((user) => 
-      user.id === editingUser.id ? { ...user, name: editedName, email: editedEmail, password: editedPassword } : user
-    ));
-    setEditingUser(null);
+    axios.put(`${API_URL}/${editingUser.id}`, {
+      name: editedName,
+      email: editedEmail,
+      password: editedPassword,
+    })
+    .then(() => {
+      setUsers(users.map((user) => 
+        user.id === editingUser.id ? { ...user, fullname: editedName, email: editedEmail, password: editedPassword } : user
+      ));
+      setEditingUser(null);
+    })
+    .catch((error) => console.error("Lỗi cập nhật:", error));
   };
 
   // Hàm xóa người dùng
   const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+    axios.delete(`${API_URL}/${id}`)
+      .then(() => {
+        setUsers(users.filter((user) => user.id !== id));
+      })
+      .catch((error) => console.error("Lỗi xóa:", error));
   };
 
   return (
@@ -54,7 +73,7 @@ const UserManagement = () => {
           {users.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.name}</td>
+              <td>{user.fullname}</td>
               <td>{user.email}</td>
               <td>{user.password}</td>
               <td>
