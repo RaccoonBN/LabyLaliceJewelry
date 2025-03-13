@@ -13,8 +13,9 @@ const  productRoutes = require("./routes/productRoutes");
 // Middleware để xử lý JSON
 app.use(bodyParser.json());
 app.use(cors());
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "./public/uploads")));
 app.use("/product", productRoutes);
 app.use("/users", userRoutes);
 app.use("/categories", categoryRoutes);

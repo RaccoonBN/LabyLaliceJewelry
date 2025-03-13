@@ -32,7 +32,7 @@ function App() {
           <Route path="/BlogPage" element={<BlogPage />} /> {/* Route cho Blog */}
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/AllProduct" element={<AllProduct />} />
-          <Route path="/product/:id" element={<ProductPage />} /> {/* Route chi tiết sản phẩm */}
+          <Route path="/product/:id" element={<ProductPage />}/> {/* Route chi tiết sản phẩm */}
           <Route path="/orders/:id" element={<OrderDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/order" element={<Order />} />

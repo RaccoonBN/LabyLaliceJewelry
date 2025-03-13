@@ -8,17 +8,22 @@ function ProductCard({ id, image, collectionName, productName, price }) {
   // Định dạng giá
   const formattedPrice = price ? Number(price).toLocaleString("vi-VN") + " VND" : "Liên hệ";
 
-  // Xử lý sự kiện khi click vào sản phẩm
+  // Xử lý khi click vào sản phẩm
   const handleClick = () => {
-    navigate(`/product/${id}`);
+    if (id) {
+      navigate(`/product/${id}`);
+    } else {
+      console.error("ID sản phẩm không hợp lệ:", id);
+    }
   };
 
   return (
-    <div className="product-card" onClick={handleClick}>
+    <div className="product-card" onClick={handleClick} style={{ cursor: id ? "pointer" : "default" }}>
       <img
-        src={image ? image : "/default-image.jpg"} // Nếu không có ảnh, dùng ảnh mặc định
+        src={image && image.startsWith("http") ? image : "/default-image.jpg"} // Kiểm tra đường dẫn ảnh hợp lệ
         alt={productName || "Sản phẩm không có tên"}
         className="product-image"
+        onError={(e) => (e.target.src = "/default-image.jpg")} // Nếu lỗi, hiển thị ảnh mặc định
       />
       <p className="collection-name">{collectionName || "Bộ sưu tập chưa có"}</p>
       <p className="product-name">{productName || "Tên sản phẩm không có"}</p>

@@ -105,29 +105,37 @@ const ProductManagement = () => {
 
   const filteredProducts = products
   .filter((product) => {
-    // Kiểm tra kiểu dữ liệu trước khi so sánh
-    const productCategoryId = Number(product.category_id);  
-    const productCollectionId = Number(product.collection_id);
-    const selectedCategoryId = categoryFilter ? Number(categoryFilter) : undefined;
-    const selectedCollectionId = collectionFilter ? Number(collectionFilter) : undefined;
-    
+    const productCategoryId = product.category_id ? Number(product.category_id) : null;
+    const productCollectionId = product.collection_id ? Number(product.collection_id) : null;
+    const selectedCategoryId = categoryFilter ? Number(categoryFilter) : null;
+    const selectedCollectionId = collectionFilter ? Number(collectionFilter) : null;
 
-    if (selectedCategoryId !== undefined && productCategoryId !== selectedCategoryId) {
-      return false;
-    }
-    if (selectedCollectionId !== undefined && productCollectionId !== selectedCollectionId) {
+    // Lọc theo danh mục
+    if (selectedCategoryId !== null && productCategoryId !== selectedCategoryId) {
       return false;
     }
     
+    // Lọc theo bộ sưu tập
+    if (selectedCollectionId !== null && productCollectionId !== selectedCollectionId) {
+      return false;
+    }
 
     return true;
   })
   .sort((a, b) => {
-    if (sortOrder === "newest") return new Date(b.created_at) - new Date(a.created_at);
-    if (sortOrder === "priceAsc") return a.price - b.price;
-    if (sortOrder === "priceDesc") return b.price - a.price;
+    if (sortOrder === "newest") {
+      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    }
+    if (sortOrder === "priceAsc") {
+      return a.price - b.price;
+    }
+    if (sortOrder === "priceDesc") {
+      return b.price - a.price;
+    }
     return 0;
   });
+
+console.log("🟢 Danh sách sản phẩm sau khi lọc:", filteredProducts);
 
 
 
@@ -171,29 +179,42 @@ const ProductManagement = () => {
       </div>
 
 
-           {/* Danh sách sản phẩm */}
-           <div className="product-list">
-        {products.map((product) => (
-          <div key={product.id} className="product-card">
-            <img
-            src={product.image ? product.image : demosp}
-            alt={product.name}
-            className="product-image"
-            />
-            <h3 className="product-name">{product.name}</h3>
-            <p className="product-category">
-            {product.category_name} - {product.collection_name}
-           </p>
-            <p className="product-price">
-            {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(product.price))}
-          </p>
-            <p className="product-stock">Số lượng: {product.stock}</p>
-            <div className="product-actions">
-              <button className="edit-button" onClick={() => openModal(product)}><FaEdit /></button>
-              <button className="delete-button" onClick={() => handleDelete(product.id)}><FaTrash /></button>
+        {/* Danh sách sản phẩm */}
+      <div className="product-list">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <div key={product.id} className="product-card">
+              <img
+                src={product.image ? product.image : demosp}
+                alt={product.name}
+                className="product-image"
+              />
+              <h3 className="product-name">{product.name}</h3>
+              <p className="product-category">
+                {product.category_name} - {product.collection_name}
+              </p>
+              <p className="product-price">
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(Number(product.price))}
+              </p>
+              <p className="product-stock">Số lượng: {product.stock}</p>
+              <div className="product-actions">
+                <button className="edit-button" onClick={() => openModal(product)}>
+                  <FaEdit />
+                </button>
+                <button className="delete-button" onClick={() => handleDelete(product.id)}>
+                  <FaTrash />
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>Không có sản phẩm nào phù hợp.</p>
+        )}
       </div>
 
       {/* Phân trang */}

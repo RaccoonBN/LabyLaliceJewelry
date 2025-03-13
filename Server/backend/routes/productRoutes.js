@@ -101,40 +101,30 @@ router.get("/category/:categoryName", (req, res) => {
 
 // 🟢 API thêm sản phẩm
 router.post("/product", upload.single("image"), (req, res) => {
-    const { name, description, price, stock, category_id, collection_id } = req.body;
-    const image = req.file ? req.file.filename : null;
-  
-    // Truy vấn lấy category_id từ tên danh mục
-    db.query("SELECT id FROM categories WHERE name = ?", [category_id], (err, categoryResults) => {
-      if (err || categoryResults.length === 0) {
-        return res.status(400).json({ error: "Danh mục không tồn tại" });
-      }
-  
-      const categoryId = categoryResults[0].id;
-  
-      // Truy vấn lấy collection_id từ tên bộ sưu tập
-      db.query("SELECT id FROM collections WHERE name = ?", [collection_id], (err, collectionResults) => {
-        if (err || collectionResults.length === 0) {
-          return res.status(400).json({ error: "Bộ sưu tập không tồn tại" });
-        }
-  
-        const collectionId = collectionResults[0].id;
-  
-        db.query(
-          "INSERT INTO products (name, description, price, stock, category_id, collection_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
-          [name, description, price, stock, categoryId, collectionId, image],
-          (err, result) => {
-            if (err) {
+  const { name, description, price, stock, category_id, collection_id } = req.body;
+  const image = req.file ? req.file.filename : null;
+
+  // Kiểm tra dữ liệu đầu vào
+  if (!name || !description || !price || !stock || !category_id || !collection_id) {
+      return res.status(400).json({ error: "Thiếu dữ liệu đầu vào" });
+  }
+
+  // Chèn vào database
+  db.query(
+      "INSERT INTO products (name, description, price, stock, category_id, collection_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [name, description, price, stock, category_id, collection_id, image],
+      (err, result) => {
+          if (err) {
               console.error("❌ Lỗi MySQL:", err.sqlMessage);
               return res.status(500).json({ error: "Lỗi khi thêm sản phẩm", details: err.sqlMessage });
-            }
-  
-            res.json({ message: "✅ Thêm sản phẩm thành công", productId: result.insertId });
           }
-        );
-      });
-    });
-  });
+
+          res.json({ message: "✅ Thêm sản phẩm thành công", productId: result.insertId });
+      }
+  );
+});
+
+
   
   
 

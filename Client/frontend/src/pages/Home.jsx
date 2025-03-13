@@ -44,15 +44,17 @@ function Home() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("http://localhost:2000/products");
-        setProducts(response.data); // Lưu dữ liệu sản phẩm vào state
-        setLoading(false); // Đặt loading là false khi dữ liệu đã được lấy
+        console.log("Dữ liệu từ API:", response.data); // Kiểm tra dữ liệu trả về
+        setProducts(response.data);
+        setLoading(false);
       } catch (error) {
+        console.error("Lỗi tải sản phẩm:", error);
         setError("Có lỗi xảy ra khi tải dữ liệu sản phẩm.");
-        setLoading(false); // Đặt loading là false khi gặp lỗi
+        setLoading(false);
       }
     };
-
-    fetchProducts(); // Gọi hàm lấy dữ liệu khi component được render
+  
+    fetchProducts();
   }, []);
 
   if (loading) return <div>Đang tải...</div>;
@@ -82,15 +84,25 @@ function Home() {
 
         {/* Hiển thị sản phẩm */}
         <div className="new-products">
-          {displayedProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              image={product.image ? `http://localhost:4000/product/uploads/${product.image}` : "/default-image.jpg"}
-              collectionName={product.category_name || "Bộ sưu tập chưa có"} // Sử dụng category_name từ API
-              productName={product.name || "Tên sản phẩm không có"} // Sử dụng name từ API
-              price={product.price || "Chưa có giá"}
-            />
-          ))}
+        {displayedProducts.map((product) => {
+        const imageUrl = product.image.includes("http")
+          ? product.image
+          : `http://localhost:4000/uploads/${product.image}`;
+
+        console.log("URL ảnh đúng:", imageUrl); // Kiểm tra URL
+
+        return (
+          <ProductCard
+          id={product.id} // 🔥 Thêm id vào đây
+            key={product.id}
+            image={imageUrl}
+            collectionName={product.category_name || "Bộ sưu tập chưa có"}
+            productName={product.name || "Tên sản phẩm không có"}
+            price={product.price || "Chưa có giá"}
+          />
+        );
+      })}
+
         </div>
 
         {/* Phân trang */}

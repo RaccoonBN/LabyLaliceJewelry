@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./db'); // Import file kết nối MySQL
 const productRoutes = require("./routes/product");
+const reviewsRouter = require("./routes/reviews"); 
+
 const cors = require('cors');
 
 const app = express();
@@ -12,6 +14,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use("/products", productRoutes);
+app.use("/reviews", reviewsRouter);
 
 // Chạy server
 app.listen(PORT, () => {

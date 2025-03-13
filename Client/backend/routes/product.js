@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
       // Kiểm tra nếu sản phẩm không có hình ảnh, thay bằng một ảnh mặc định
       const formattedResults = results.map(product => {
         product.image = product.image 
-          ? `http://localhost:4000/product/uploads/${product.image}`  // Đường dẫn hình ảnh hợp lệ
+          ? `http://localhost:4000/uploads/${product.image}`  // Đường dẫn hình ảnh hợp lệ
           : "/default-image.jpg"; // Ảnh mặc định khi không có hình ảnh
         return product;
       });
@@ -40,41 +40,66 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const productId = req.params.id;
 
-  // Truy vấn thông tin sản phẩm theo ID
   const productQuery = `
-    SELECT products.id, products.name, products.description, products.price, products.stock, products.image, products.category_id, products.collection_id, categories.name AS category_name, collections.name AS collection_name
-    FROM products
-    LEFT JOIN categories ON products.category_id = categories.id
-    LEFT JOIN collections ON products.collection_id = collections.id
-    WHERE products.id = ?
+    SELECT p.id, p.name, p.description, p.price, p.stock, p.image, 
+           p.category_id, p.collection_id, 
+           c.name AS category_name, col.name AS collection_name,
+           COUNT(r.id) AS review_count, 
+           IFNULL(AVG(r.rating), 0) AS avg_rating
+    FROM products p
+    LEFT JOIN categories c ON p.category_id = c.id
+    LEFT JOIN collections col ON p.collection_id = col.id
+    LEFT JOIN reviews r ON p.id = r.product_id
+    WHERE p.id = ?
+    GROUP BY p.id;
   `;
 
   db.query(productQuery, [productId], (err, productResults) => {
     if (err) {
+      console.error("Lỗi truy vấn sản phẩm:", err);
       return res.status(500).json({ error: err.message });
     }
+
     if (productResults.length === 0) {
       return res.status(404).json({ message: "Product not found" });
     }
-    
-    const product = productResults[0];
 
-    // Lấy sản phẩm liên quan (theo category_id và collection_id)
+    let product = productResults[0];
+    product.avg_rating = Number(product.avg_rating) || 0; // Ép kiểu về số
+
     const relatedProductsQuery = `
-      SELECT products.id, products.name, products.description, products.price, products.stock, products.image
+      SELECT id, name, description, price, stock, image 
       FROM products
-      WHERE (products.category_id = ? OR products.collection_id = ?)
-      AND products.id != ?
+      WHERE (category_id = ? OR collection_id = ?) AND id != ?
     `;
-    
+
     db.query(relatedProductsQuery, [product.category_id, product.collection_id, productId], (err, relatedProducts) => {
       if (err) {
+        console.error("Lỗi truy vấn sản phẩm liên quan:", err);
         return res.status(500).json({ error: err.message });
       }
 
-      res.json({ product, relatedProducts });
+      const reviewQuery = `
+        SELECT r.id, r.user_id, r.product_id, r.rating, r.comment, r.created_at, 
+               u.fullname AS username
+        FROM reviews r
+        JOIN users u ON r.user_id = u.id
+        WHERE r.product_id = ?
+        ORDER BY r.created_at DESC;
+      `;
+
+      db.query(reviewQuery, [productId], (err, reviews) => {
+        if (err) {
+          console.error("Lỗi truy vấn đánh giá sản phẩm:", err);
+          return res.status(500).json({ error: err.message });
+        }
+
+        res.json({ product, relatedProducts, reviews });
+      });
     });
   });
 });
+
+
 
 module.exports = router;
