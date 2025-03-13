@@ -6,35 +6,41 @@ const router = express.Router();
 
 // Lấy danh sách sản phẩm
 router.get("/", (req, res) => {
-    const query = `
-      SELECT 
-        products.id, 
-        products.name, 
-        products.description, 
-        products.price, 
-        products.stock, 
-        products.image, 
-        categories.name AS category_name
-      FROM products
-      LEFT JOIN categories ON products.category_id = categories.id
-    `;
-  
-    db.query(query, (err, results) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-  
-      // Kiểm tra nếu sản phẩm không có hình ảnh, thay bằng một ảnh mặc định
-      const formattedResults = results.map(product => {
-        product.image = product.image 
-          ? `http://localhost:4000/uploads/${product.image}`  // Đường dẫn hình ảnh hợp lệ
-          : "/default-image.jpg"; // Ảnh mặc định khi không có hình ảnh
-        return product;
-      });
-  
-      res.json(formattedResults); // Trả về danh sách sản phẩm đã được xử lý
+  const query = `
+    SELECT 
+      products.id, 
+      products.name, 
+      products.description, 
+      products.price, 
+      products.stock, 
+      products.image, 
+      products.category_id,  -- ✅ Thêm cột category_id vào đây
+      categories.name AS category_name,
+      products.collection_id, -- ✅ Thêm collection_id nếu cần
+      collections.name AS collection_name
+    FROM products
+    LEFT JOIN categories ON products.category_id = categories.id
+    LEFT JOIN collections ON products.collection_id = collections.id
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    // Kiểm tra nếu sản phẩm không có hình ảnh, thay bằng một ảnh mặc định
+    const formattedResults = results.map(product => {
+      product.image = product.image 
+        ? `http://localhost:4000/uploads/${product.image}`
+        : "/default-image.jpg"; 
+      return product;
     });
+
+    res.json(formattedResults); // Trả về danh sách sản phẩm đã được xử lý
   });
+});
+
+
   
 // Lấy sản phẩm theo id, danh mục và bộ sưu tập
 router.get("/:id", (req, res) => {

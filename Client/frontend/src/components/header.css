@@ -188,3 +188,10 @@ body, .header-first, .header-second {
   width: 100%; /* Chiều rộng bằng với header */
   max-width: 600px; /* Giới hạn chiều rộng nếu cần */
 }
+.menu-item.active {
+  color: #CC9FFF;
+}
+
+.menu-item.active::after {
+  width: 100%;
+}
