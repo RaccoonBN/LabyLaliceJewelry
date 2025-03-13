@@ -1,0 +1,92 @@
+/* Modal Overlay */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .custom-modal-overlay.open {
+    display: flex;
+  }
+  
+  /* Modal Content */
+  .custom-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 100%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .custom-modal-header h3 {
+    margin: 0;
+  }
+  
+  .custom-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .custom-mark-all-read {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  .custom-mark-all-read:hover {
+    background-color: #45a049;
+  }
+  
+  /* Notification List */
+  .custom-notification-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .custom-notification-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  
+  .custom-notification-item.read {
+    background-color: #f0f8ff;
+  }
+  
+  .custom-notification-icon {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .custom-notification-message {
+    flex-grow: 1;
+  }
+  
+  .custom-notification-item:hover {
+    background-color: #f9f9f9;
+  }
+  

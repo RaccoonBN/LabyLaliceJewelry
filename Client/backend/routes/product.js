@@ -41,7 +41,6 @@ router.get("/", (req, res) => {
 });
 
 
-  
 // Lấy sản phẩm theo id, danh mục và bộ sưu tập
 router.get("/:id", (req, res) => {
   const productId = req.params.id;
@@ -63,11 +62,11 @@ router.get("/:id", (req, res) => {
   db.query(productQuery, [productId], (err, productResults) => {
     if (err) {
       console.error("Lỗi truy vấn sản phẩm:", err);
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: "Lỗi truy vấn dữ liệu sản phẩm." });
     }
 
     if (productResults.length === 0) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Sản phẩm không tồn tại." });
     }
 
     let product = productResults[0];
@@ -82,7 +81,12 @@ router.get("/:id", (req, res) => {
     db.query(relatedProductsQuery, [product.category_id, product.collection_id, productId], (err, relatedProducts) => {
       if (err) {
         console.error("Lỗi truy vấn sản phẩm liên quan:", err);
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: "Lỗi truy vấn sản phẩm liên quan." });
+      }
+
+      // Nếu không có sản phẩm liên quan
+      if (relatedProducts.length === 0) {
+        console.log("Không có sản phẩm liên quan.");
       }
 
       const reviewQuery = `
@@ -97,7 +101,7 @@ router.get("/:id", (req, res) => {
       db.query(reviewQuery, [productId], (err, reviews) => {
         if (err) {
           console.error("Lỗi truy vấn đánh giá sản phẩm:", err);
-          return res.status(500).json({ error: err.message });
+          return res.status(500).json({ error: "Lỗi truy vấn đánh giá sản phẩm." });
         }
 
         res.json({ product, relatedProducts, reviews });
@@ -105,6 +109,7 @@ router.get("/:id", (req, res) => {
     });
   });
 });
+
 
 
 

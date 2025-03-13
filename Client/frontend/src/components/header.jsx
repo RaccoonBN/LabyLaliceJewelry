@@ -7,6 +7,7 @@ import axios from "axios";
 import "./header.css";
 import logo from "../assets/logo.png";
 import DropdownMenu from "./dropdownMenu";
+import NotificationModal from "./NotificationModal"; // Nhập modal
 
 const Header = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -15,6 +16,16 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Mở modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Đóng modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     // Lấy token từ localStorage
@@ -88,7 +99,9 @@ const Header = () => {
           <div className="icons">
             {isLoggedIn ? (
               <>
-                <FaBell className="icon" onClick={handleNotificationClick} />
+                <div className="icon" onClick={openModal}>
+                  <FaBell />
+                </div>
                 <FaShoppingCart className="icon" onClick={handleCartClick} />
                 <div className="user-icon">
                   <FaUser className="icon" onClick={handleUserIconClick} />
@@ -130,6 +143,7 @@ const Header = () => {
             <Link to="/BlogPage">BLOG TIN TỨC</Link>
           </div>
         </div>
+        <NotificationModal isOpen={isModalOpen} onClose={closeModal} />
       </header>
     </>
   );

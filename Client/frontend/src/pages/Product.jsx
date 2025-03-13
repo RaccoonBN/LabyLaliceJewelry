@@ -21,7 +21,7 @@ const ProductPage = () => {
         const response = await axios.get(`http://localhost:2000/products/${id}`);
         console.log("Dữ liệu từ API:", response.data); // Debug dữ liệu nhận được từ API
         setProduct(response.data.product);
-        setRelatedProducts(response.data.relatedProducts);
+        setRelatedProducts(response.data.relatedProducts || []); // Đảm bảo mảng sản phẩm liên quan không phải là undefined
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
         setError("Có lỗi xảy ra khi tải dữ liệu sản phẩm.");
@@ -51,13 +51,20 @@ const ProductPage = () => {
           {relatedProducts.length > 0 ? (
             relatedProducts.map((item) => (
               <Link to={`/product/${item.id}`} key={item.id} className="related-product-card">
-                <img 
-                  src={item.image ? item.image : "/default-image.jpg"} 
-                  alt={item.name || "Sản phẩm không có tên"} 
-                  onError={(e) => (e.target.src = "/default-image.jpg")} 
+                <img
+                  src={item.image ? `http://localhost:4000/uploads/${item.image}` : "/default-image.jpg"} // Đảm bảo lấy đúng đường dẫn ảnh
+                  alt={item.name || "Sản phẩm không có tên"}
+                  onError={(e) => {
+                    // Kiểm tra nếu lỗi thì thay đổi src một lần nữa
+                    if (e.target.src !== "/default-image.jpg") {
+                      e.target.src = "/default-image.jpg";
+                    }
+                  }}
                 />
                 <p className="related-product-title">{item.name || "Không có tên"}</p>
-                <p className="related-price">{item.price ? item.price.toLocaleString() + " VND" : "Liên hệ"}</p>
+                <p className="related-price">
+                {item.price ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.price) : "Liên hệ"}
+                </p>
               </Link>
             ))
           ) : (
