@@ -172,6 +172,36 @@ body, .header-first, .header-second {
   text-decoration: none; /* Loại bỏ gạch chân mặc định của Link */
   color: inherit; /* Đảm bảo rằng màu chữ được kế thừa từ parent */
 }
+.login-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #DE4BB1; /* Màu nền nút */
+  color: white; /* Màu chữ */
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none; /* Loại bỏ gạch chân */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #bf3e98; /* Màu nền khi hover */
+  transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi hover */
+}
+
+.login-button a {
+  color: white; /* Đảm bảo chữ trong liên kết là màu trắng */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-button a:hover {
+  text-decoration: underline; /* Gạch chân khi hover trên liên kết */
+}
+
 /* Dropdown menu */
 .dropdown-menu {
   position: absolute;
