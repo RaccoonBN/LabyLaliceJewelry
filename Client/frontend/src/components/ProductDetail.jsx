@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./ProductDetail.css";
 
 const ProductDetail = ({ product }) => {
@@ -8,6 +11,29 @@ const ProductDetail = ({ product }) => {
     style: "currency",
     currency: "VND",
   }).format(product.price);
+
+  // ✅ Xử lý thêm vào giỏ hàng
+  const handleAddToCart = async () => {
+    try {
+      const userId = 3; // 🔹 Thay bằng userId từ session hoặc state
+      const response = await axios.post("http://localhost:2000/cart/add", {
+        userId,
+        productId: product.id,
+        quantity: 1, // Mặc định thêm 1 sản phẩm
+      });
+
+      toast.success(`🛒 ${product.name} đã được thêm vào giỏ hàng!`, {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      toast.error("❌ Lỗi khi thêm vào giỏ hàng!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      console.error("Lỗi:", error);
+    }
+  };
 
   return (
     <div className="product-detail-container">
@@ -36,7 +62,7 @@ const ProductDetail = ({ product }) => {
 
         {/* Nút mua hàng */}
         <div className="product-detail-actions">
-          <button className="product-detail-add-to-cart">🛒 Thêm vào giỏ hàng</button>
+          <button className="product-detail-add-to-cart" onClick={handleAddToCart}>🛒 Thêm vào giỏ hàng</button>
           <button className="product-detail-buy-now">⚡ Mua ngay</button>
         </div>
       </div>
