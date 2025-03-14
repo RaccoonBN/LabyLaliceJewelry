@@ -102,7 +102,7 @@ body, .header-first, .header-second {
 
 /* Các icon trong thanh điều hướng */
 .icon {
-  font-size: 26px;
+  font-size: 27px;
   cursor: pointer;
   transition: transform 0.3s ease, color 0.3s ease;
 }
@@ -185,6 +185,39 @@ body, .header-first, .header-second {
   cursor: pointer;
   text-decoration: none; /* Loại bỏ gạch chân */
   transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.icon-container {
+  position: relative;
+  display: inline-block;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;  /* Căn chỉnh lên trên */
+  right: -5px; /* Căn chỉnh sang phải */
+  background-color: red;
+  color: white;
+  border-radius: 50%;  /* Làm tròn badge */
+  font-size: 10px;  /* Giảm kích thước số */
+  width: 16px;  /* Đảm bảo badge luôn tròn */
+  height: 16px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Hiệu ứng bóng nhẹ */
+  border: 1px solid white; /* Viền trắng tinh tế */
+}
+
+
+
+
+.notification-icon {
+  position: relative;
+}
+
+.cart-icon {
+  position: relative;
 }
 
 .login-button:hover {

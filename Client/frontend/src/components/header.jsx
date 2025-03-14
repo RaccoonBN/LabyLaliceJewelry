@@ -7,7 +7,7 @@ import axios from "axios";
 import "./header.css";
 import logo from "../assets/logo.png";
 import DropdownMenu from "./dropdownMenu";
-import NotificationModal from "./NotificationModal"; // Nhập modal
+import NotificationModal from "./NotificationModal";
 
 const Header = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -15,73 +15,67 @@ const Header = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [cartCount, setCartCount] = useState(0);
+  const [notificationCount, setNotificationCount] = useState(3); // Giả định có thông báo
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Mở modal
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  // Đóng modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Lấy token từ localStorage
     const token = localStorage.getItem("token");
-    console.log("Token trong localStorage: ", token);
-    
+
     if (token) {
-      axios.get("http://localhost:2000/auth/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(response => {
-        setUser(response.data);
-        setIsLoggedIn(true);
-      })
-      .catch(error => {
-        if (error.response && error.response.status === 403) {
-          console.error("Token hết hạn hoặc không hợp lệ. Đăng nhập lại.");
-          localStorage.removeItem("token");
-          setIsLoggedIn(false);
-          navigate("/login"); // Chuyển hướng đến trang đăng nhập
-        } else {
-          console.error("Lỗi khi lấy thông tin người dùng:", error);
-          setIsLoggedIn(false);
-        }
-      });
+      axios
+        .get("http://localhost:2000/auth/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(response => {
+          setUser(response.data);
+          setIsLoggedIn(true);
+        })
+        .catch(error => {
+          if (error.response && error.response.status === 403) {
+            console.error("Token hết hạn hoặc không hợp lệ.");
+            localStorage.removeItem("token");
+            setIsLoggedIn(false);
+            navigate("/login");
+          } else {
+            console.error("Lỗi khi lấy thông tin người dùng:", error);
+            setIsLoggedIn(false);
+          }
+        });
     } else {
       setIsLoggedIn(false);
     }
   }, [navigate]);
 
-  const handleUserIconClick = () => {
-    if (isLoggedIn) {
-      setIsUserDropdownOpen(prev => !prev);
+  useEffect(() => {
+    if (user?.id) {
+      fetchCartCount(user.id);
+    }
+  }, [user]);
+
+  const fetchCartCount = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:2000/cart/count/${userId}`);
+      console.log("Dữ liệu giỏ hàng từ API:", response.data);
+      
+      // Chuyển total_count thành số (number)
+      const count = Number(response.data.total_count);
+      setCartCount(count);
+    } catch (error) {
+      console.error("Lỗi khi lấy số lượng giỏ hàng:", error);
     }
   };
+  
 
-  const handleCartClick = () => {
-    if (isLoggedIn) {
-      navigate("/cart");
-    } else {
-      navigate("/login"); // Chuyển hướng tới trang đăng nhập nếu chưa đăng nhập
-    }
-  };
-
-  const handleNotificationClick = () => {
-    if (isLoggedIn) {
-      navigate("/notifications");
-    } else {
-      navigate("/login"); // Chuyển hướng tới trang đăng nhập nếu chưa đăng nhập
-    }
-  };
-
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+  const handleUserIconClick = () => isLoggedIn && setIsUserDropdownOpen(prev => !prev);
+  const handleCartClick = () => navigate(isLoggedIn ? "/cart" : "/login");
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    navigate("/login"); // Chuyển hướng tới trang đăng nhập sau khi đăng xuất
+    navigate("/login");
   };
 
   return (
@@ -99,10 +93,23 @@ const Header = () => {
           <div className="icons">
             {isLoggedIn ? (
               <>
-                <div className="icon" onClick={openModal}>
-                  <FaBell />
+                {/* 🔔 Icon thông báo */}
+                <div className="icon-container">
+                  <FaBell className="icon" onClick={openModal} />
+                  {notificationCount > 0 && <span className="badge">{notificationCount}</span>}
                 </div>
+
+                {/* 🛒 Icon giỏ hàng */}
+                <div className="icon-container">
                 <FaShoppingCart className="icon" onClick={handleCartClick} />
+                {cartCount > 0 ? (
+                  <span className="badge">{cartCount}</span>
+                ) : (
+                  console.log("Giỏ hàng trống, không hiển thị badge")
+                )}
+                </div>
+
+                {/* 👤 User Icon */}
                 <div className="user-icon">
                   <FaUser className="icon" onClick={handleUserIconClick} />
                   {isUserDropdownOpen && (

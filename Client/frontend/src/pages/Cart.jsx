@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-import './Cart.css';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import "./Cart.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -19,41 +19,39 @@ const Cart = () => {
       return;
     }
 
-    axios.get("http://localhost:2000/auth/profile", {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
+    axios
+      .get("http://localhost:2000/auth/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
         if (response.data?.id) {
           setUserId(response.data.id);
         } else {
           console.error("Không lấy được userId từ profile");
         }
       })
-      .catch(error => console.error("Lỗi khi lấy profile:", error))
+      .catch((error) => console.error("Lỗi khi lấy profile:", error))
       .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
     if (!userId) return;
 
-    axios.get(`http://localhost:2000/cart/${userId}`)
-      .then(response => setCartItems(response.data || []))
-      .catch(error => console.error("Lỗi khi tải giỏ hàng:", error));  
+    axios
+      .get(`http://localhost:2000/cart/${userId}`)
+      .then((response) => {
+        const cartData = response.data.map((item) => ({
+          ...item,
+          checked: false, // Mặc định chưa chọn
+        }));
+        setCartItems(cartData || []);
+      })
+      .catch((error) => console.error("Lỗi khi tải giỏ hàng:", error));
   }, [userId]);
 
-  const handleCheckout = () => {
-    if (totalPrice > 0) {
-      toast.success("✅ Chuyển đến trang thanh toán!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
-      navigate("/order");
-    }
-  };
-
   const toggleCheckbox = (id) => {
-    setCartItems(prevItems =>
-      prevItems.map(item => 
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === id ? { ...item, checked: !item.checked } : item
       )
     );
@@ -62,8 +60,8 @@ const Cart = () => {
   const updateQuantity = (id, delta) => {
     if (!userId) return;
 
-    setCartItems(prevItems =>
-      prevItems.map(item => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) => {
         if (item.id === id) {
           const newQuantity = Math.max(1, item.quantity + delta);
           return { ...item, quantity: newQuantity };
@@ -72,14 +70,15 @@ const Cart = () => {
       })
     );
 
-    axios.put("http://localhost:2000/cart/update", { userId, id, delta })
+    axios
+      .put("http://localhost:2000/cart/update", { userId, id, delta })
       .then(() => {
         toast.success("✅ Cập nhật số lượng thành công!", {
           position: "top-right",
           autoClose: 2000,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Lỗi khi cập nhật số lượng:", error);
         toast.error("❌ Lỗi khi cập nhật số lượng!", {
           position: "top-right",
@@ -91,15 +90,16 @@ const Cart = () => {
   const removeItem = (id) => {
     if (!userId) return;
 
-    axios.post("http://localhost:2000/cart/removeItem", { cartItemId: id })
-    .then(() => {
-        setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+    axios
+      .post("http://localhost:2000/cart/removeItem", { cartItemId: id })
+      .then(() => {
+        setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
         toast.success("🗑️ Sản phẩm đã được xóa khỏi giỏ hàng!", {
           position: "top-right",
           autoClose: 2000,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Lỗi khi xóa sản phẩm:", error);
         toast.error("❌ Lỗi khi xóa sản phẩm!", {
           position: "top-right",
@@ -108,8 +108,28 @@ const Cart = () => {
       });
   };
 
+  const handleCheckout = () => {
+    const selectedItems = cartItems.filter((item) => item.checked);
+    if (selectedItems.length === 0) {
+      toast.error("❌ Vui lòng chọn ít nhất một sản phẩm để thanh toán!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      return;
+    }
+
+    localStorage.setItem("checkoutItems", JSON.stringify(selectedItems));
+
+    toast.success("✅ Chuyển đến trang thanh toán!", {
+      position: "top-right",
+      autoClose: 2000,
+    });
+
+    navigate("/order");
+  };
+
   const totalPrice = cartItems
-    .filter(item => item.checked)
+    .filter((item) => item.checked)
     .reduce((total, item) => total + (item.price || 0) * (item.quantity || 1), 0);
 
   return (
@@ -124,7 +144,7 @@ const Cart = () => {
         <div className="cart-content">
           <div className="cart-items-container">
             {cartItems.length > 0 ? (
-              cartItems.map(item => (
+              cartItems.map((item) => (
                 <div key={item.id} className="cart-item">
                   <input
                     type="checkbox"
@@ -132,25 +152,30 @@ const Cart = () => {
                     checked={item.checked || false}
                     onChange={() => toggleCheckbox(item.id)}
                   />
-                  <img 
-                    src={item.image ? `http://localhost:4000/uploads/${item.image}` : "/default-image.jpg"} 
-                    alt={item.name} 
+                  <img
+                    src={item.image ? `http://localhost:4000/uploads/${item.image}` : "/default-image.jpg"}
+                    alt={item.name}
                     className="item-image"
                     onError={(e) => (e.target.src = "/default-image.jpg")}
                   />
                   <div className="item-details">
-                    <p className="item-collection">{item.collection}</p>
                     <p className="item-name">{item.name}</p>
                     <p className="item-price">
                       {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.price || 0)}
-                    </p>                  
-                    </div>
-                  <div className="item-quantity">
-                    <button className="quantity-btn" onClick={() => updateQuantity(item.id, -1)}>-</button>
-                    <input type="number" value={item.quantity || 1} readOnly className="quantity-input" />
-                    <button className="quantity-btn" onClick={() => updateQuantity(item.id, 1)}>+</button>
+                    </p>
                   </div>
-                  <button className="remove-item" onClick={() => removeItem(item.id)}>✖</button>
+                  <div className="item-quantity">
+                    <button className="quantity-btn" onClick={() => updateQuantity(item.id, -1)}>
+                      -
+                    </button>
+                    <input type="number" value={item.quantity || 1} readOnly className="quantity-input" />
+                    <button className="quantity-btn" onClick={() => updateQuantity(item.id, 1)}>
+                      +
+                    </button>
+                  </div>
+                  <button className="remove-item" onClick={() => removeItem(item.id)}>
+                    ✖
+                  </button>
                 </div>
               ))
             ) : (
@@ -160,14 +185,11 @@ const Cart = () => {
 
           <div className="order-summary">
             <h3 className="cart-title">📋 Tóm Tắt Đơn Hàng</h3>
-            <p className="order-subtotal">Tổng tiền hàng: {totalPrice.toLocaleString()} VND</p>
-            <p className="order-shipping">Phí vận chuyển: Miễn phí</p>
             <p className="order-total">Tổng: {totalPrice.toLocaleString()} VND</p>
             <div className="order-actions">
               <button className="checkout-btn" disabled={totalPrice === 0} onClick={handleCheckout}>
                 Thanh Toán
               </button>
-              <button className="continue-btn">Mua Thêm</button>
             </div>
           </div>
         </div>

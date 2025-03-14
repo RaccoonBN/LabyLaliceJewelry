@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import momoLogo from "../assets/momo.png";
 import vnpayLogo from "../assets/vnpay.png";
 import "./Order.css";
@@ -10,38 +11,31 @@ const Order = () => {
     phone: "",
     paymentMethod: "cod",
   });
+  const [selectedItems, setSelectedItems] = useState([]);
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
-  const [cartItems, setCartItems] = useState([
-        { id: 1, name: "Nhẫn vàng 18K", quantity: 1, price: 5000000 },
-        { id: 2, name: "Dây chuyền bạc 925", quantity: 1, price: 1200000 },
-        { id: 3, name: "Vòng tay ngọc trai", quantity: 2, price: 1800000 },
-      ]);
-      
+  useEffect(() => {
+    const checkoutItems = JSON.parse(localStorage.getItem("checkoutItems")) || [];
+    setSelectedItems(checkoutItems.filter(item => item.checked));
+  }, []);
+
   const handleChange = (e) => {
     setOrderDetails({ ...orderDetails, [e.target.name]: e.target.value });
   };
 
-  const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalAmount = selectedItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleOrderSubmit = (e) => {
     e.preventDefault();
-    alert(`🎉 Đơn hàng đã được đặt thành công!\n
-    - Họ và Tên: ${orderDetails.name}
-    - Địa chỉ: ${orderDetails.address}
-    - Số điện thoại: ${orderDetails.phone}
-    - Phương thức thanh toán: ${
-      orderDetails.paymentMethod === "cod"
-        ? "Thanh toán khi nhận hàng"
-        : orderDetails.paymentMethod === "momo"
-        ? "MoMo"
-        : "VNPay"
-    }
-    - Tổng tiền: ${totalAmount.toLocaleString()} VND
-    - Chi tiết đơn hàng: 
-    ${cartItems
-      .map((item) => `  - ${item.name} x ${item.quantity} (${(item.price * item.quantity).toLocaleString()} VND)`)
-      .join("\n")}
-    `);
+    const orderData = {
+      userId,
+      items: selectedItems.map(({ id, name, quantity, price }) => ({ id, name, quantity, price })),
+      totalAmount,
+      ...orderDetails,
+    };
+    console.log("Order Data:", orderData);
+    navigate("/order-success");
   };
 
   return (
@@ -83,7 +77,7 @@ const Order = () => {
               </tr>
             </thead>
             <tbody>
-              {cartItems.map((item) => (
+              {selectedItems.map((item) => (
                 <tr key={item.id}>
                   <td>{item.name}</td>
                   <td>{item.quantity}</td>

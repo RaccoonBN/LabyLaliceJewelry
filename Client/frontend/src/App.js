@@ -17,6 +17,7 @@ import OrderDetail from "./pages/orderDetail";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import NotificationModal from "./components/NotificationModal";
+import OrderSuccess from "./components/OrderSuccess";
 function App() {
   return (
     <Router> 
@@ -38,7 +39,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/order" element={<Order />} />
           <Route path="/noti" element={<NotificationModal />} />
-
+          <Route path="/order-success" element={<OrderSuccess />} />
         </Routes>
         <Chatbot />
         <Footer />

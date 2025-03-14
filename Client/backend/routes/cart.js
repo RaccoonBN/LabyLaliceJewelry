@@ -20,6 +20,22 @@ router.get('/:userId', (req, res) => {
     });
 });
 
+// Lấy tổng số lượng sản phẩm trong giỏ hàng
+router.get('/count/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    db.query(`SELECT SUM(ci.quantity) AS total_count 
+              FROM carts c 
+              JOIN cart_items ci ON c.id = ci.cart_id 
+              WHERE c.user_id = ?`, [userId], 
+    (err, result) => {
+        if (err) {
+            console.error("Lỗi truy vấn:", err);
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ total_count: result[0].total_count || 0 });
+    });
+});
 
 // Thêm sản phẩm vào giỏ hàng
 router.post('/add', (req, res) => {
