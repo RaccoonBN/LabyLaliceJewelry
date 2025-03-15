@@ -1,96 +1,180 @@
+/* Định dạng chung */
 .blog-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    margin-top: 140px;
-  }
-  
-  .blog-row {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .blog-card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    background: white;
-  }
-  
-  .blog-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .blog-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
-  
-  .blog-content {
-    padding: 15px;
-    text-align: center;
-  }
-  
-  .blog-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .blog-summary {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .blog-read-more {
-    display: inline-block;
-    margin-top: 10px;
-    color: #DE4BB1;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .blog-read-more:hover {
-    text-decoration: underline;
-  }
-  
-  /* Phân trang dạng số */
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 10px;
-  }
-  
-  .pagination button {
-    padding: 8px 12px;
-    border: none;
-    background: white;
-    color: #DE4BB1;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background 0.3s ease-in-out;
-  }
-  
-  .pagination button:hover {
-    background: #da8ac2;
-  }
-  
-  .pagination button.active {
-    background: #DE4BB1;
-  }
-  
-  .pagination button:disabled {
-    background: #ddd;
-    cursor: not-allowed;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  margin-top: 140px;
+}
+
+.blog-title-page {
+  font-size: 2.5rem;
+  color: #DE4BB1;
+  margin-bottom: 10px;
+  text-align: center; /* Căn giữa */
+
+}
+.blog-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #DE4BB1;
+}
+.blog-summary {
+  text-align: justify; /* Căn đều */
+  font-size: 22px; /* Tăng cỡ chữ */
+  line-height: 1.6; /* Tăng khoảng cách dòng */
+  color: #333; /* Màu chữ tối hơn để dễ đọc */
+  margin-bottom: 10px; /* Thêm khoảng cách dưới */
+}
+
+/* Thẻ bài viết */
+.blog-card {
+  width: 500px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.blog-card:hover {
+  transform: scale(1.02);
+}
+
+.blog-header {
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Hiển thị tên người đăng */
+.blog-author {
+  font-size: 14px;
+  color: #777;
+  font-style: italic;
+}
+
+.blog-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.blog-actions {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.like-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.heart-icon {
+  font-size: 26px;
+  color: #ccc;
+  transition: color 0.2s ease;
+}
+
+.heart-icon.liked {
+  color: red;
+}
+
+.like-count {
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.blog-content {
+  padding: 10px;
+}
+
+.blog-summary {
+  font-size: 14px;
+  color: #555;
+}
+
+.read-more {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* Phân trang */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.page-button {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.page-button:hover {
+  background: #ddd;
+  transform: scale(1.1);
+}
+
+.page-button.active {
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+/* Dấu "..." trong phân trang */
+.page-dots {
+  font-size: 16px;
+  color: #777;
+  padding: 8px;
+}
+
+/* Nút nổi đăng bài */
+.floating-button {
+  position: fixed;
+  bottom: 120px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  z-index: 1000;
+}
+
+.floating-button:hover {
+  background-color: #c943a1;
+  transform: scale(1.1);
+}
+
+.plus-icon {
+  font-size: 28px;
+}

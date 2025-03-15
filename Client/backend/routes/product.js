@@ -110,7 +110,32 @@ router.get("/:id", (req, res) => {
   });
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { query } = req.query;
+    console.log("🔍 Query nhận được từ frontend:", query); // Debug
 
+    if (!query) return res.json([]);
+
+    const searchQuery = `
+      SELECT p.id, p.name, p.image, p.price, c.name AS category_name, col.name AS collection_name
+      FROM products p
+      LEFT JOIN category c ON p.idcategory = c.id
+      LEFT JOIN collection col ON p.idcollection = col.id
+      WHERE p.name LIKE ? 
+         OR c.name LIKE ? 
+         OR col.name LIKE ? 
+    `;
+
+    const [results] = await db.query(searchQuery, [`%${query}%`, `%${query}%`, `%${query}%`]);
+    
+    console.log("📦 Kết quả tìm kiếm:", results); // Debug
+    res.json(results);
+  } catch (error) {
+    console.error("❌ Lỗi tìm kiếm:", error);
+    res.status(500).json({ error: "Lỗi server" });
+  }
+});
 
 
 module.exports = router;

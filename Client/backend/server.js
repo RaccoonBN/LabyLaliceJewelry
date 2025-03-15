@@ -1,31 +1,39 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('./db'); // Import file kết nối MySQL
+const cors = require('cors');
+const path = require('path');
+const db = require('./db'); // Kết nối MySQL
+
+// Import các route
 const productRoutes = require("./routes/product");
-const reviewsRouter = require("./routes/reviews"); 
+const reviewsRouter = require("./routes/reviews");
 const categoryRoutes = require("./routes/categories");
 const authRoutes = require("./routes/auth");
-const cart = require("./routes/cart")
-const cors = require('cors');
-
+const cartRoutes = require("./routes/cart");
+const orderRoutes = require("./routes/order");
+const postRoutes = require("./routes/post")
 const app = express();
 const PORT = 2000;
 
-// Middleware để xử lý JSON
+// Middleware xử lý JSON & CORS
 app.use(bodyParser.json());
-app.use(
-    cors({
-      origin: "http://localhost:3000", // Chỉ định frontend
-      credentials: true, // Cho phép gửi cookie, token
-    })
-  );
+app.use(cors({
+    origin: "http://localhost:3000", // Cho phép frontend truy cập API
+    credentials: true, // Hỗ trợ cookie & token
+}));
+
+app.use('/uploads', express.static(path.join(__dirname, '../../../Server/backend/public/uploads')));
+
+// Cấu hình API routes
 app.use("/products", productRoutes);
 app.use("/reviews", reviewsRouter);
 app.use("/categories", categoryRoutes);
 app.use("/auth", authRoutes);
-app.use("/cart", cart);
+app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes);
+app.use("/post", postRoutes);
 
-// Chạy server
+// Khởi động server
 app.listen(PORT, () => {
     console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
 });

@@ -19,7 +19,14 @@ const Header = () => {
   const [notificationCount, setNotificationCount] = useState(3); // Giả định có thông báo
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
+  const handleSearch = () => {
+    if (searchQuery.trim() !== "") {
+      navigate(`/AllProduct?search=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -84,10 +91,19 @@ const Header = () => {
       <header>
         <div className="header-first">
           <div className="search-container">
-            <FaSearch className="search-icon" />
-            <input type="text" placeholder="Tìm kiếm" />
+            <FaSearch className="search-icon" onClick={handleSearch} />
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            />
           </div>
-          <div className="logo" onClick={() => navigate("/")}>
+          <div className="logo" onClick={() => {
+              setSelectedItem(null); // Bỏ chọn tất cả menu
+              navigate("/");
+          }}>
             <img src={logo} alt="Logo" />
           </div>
           <div className="icons">

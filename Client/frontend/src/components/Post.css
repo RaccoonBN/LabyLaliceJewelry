@@ -1,0 +1,172 @@
+/* Overlay cho modal */
+.post-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px; /* Tránh modal bị sát mép màn hình */
+}
+
+/* Nội dung modal */
+.post-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 600px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Hiệu ứng mở modal */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+/* Chia layout thành 2 cột */
+.post-modal-body {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+/* Bố cục cột trái (form nhập dữ liệu) */
+.post-content-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Ô nhập liệu */
+.post-modal-input, .post-modal-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Textarea lớn hơn */
+.post-modal-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Tác giả */
+.post-modal-author {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* Bố cục cột phải (khu vực ảnh) */
+.post-content-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px; /* Đảm bảo đủ không gian */
+    gap: 10px; /* Khoảng cách giữa các phần */
+}
+
+/* Khu vực kéo thả ảnh với tỷ lệ 1:1 */
+.dropzone {
+    border: 2px dashed #007bff;
+    text-align: center;
+    color: #007bff;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 250px; /* Giữ kích thước hợp lý */
+    aspect-ratio: 1 / 1; /* Đảm bảo tỷ lệ vuông */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #f8f9fa; /* Màu nền nhẹ nhàng */
+    padding: 10px; /* Tạo khoảng trống bên trong */
+}
+
+.dropzone:hover {
+    background: rgba(0, 123, 255, 0.1);
+}
+
+/* Ảnh preview */
+.preview-img {
+    width: 100%;
+    max-width: 250px; /* Để không quá lớn */
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Đảm bảo vùng crop ảnh cũng có tỷ lệ 1:1 */
+.react-image-crop {
+    width: 100%;
+    position: relative;
+}
+
+.react-image-crop::before {
+    content: "";
+    display: block;
+    padding-top: 100%; /* Chiều cao bằng 100% chiều rộng */
+}
+
+/* Nút bấm */
+.post-modal-submit, .post-modal-close, .post-modal-reselect, .post-modal-confirm {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Nút đăng bài */
+.post-modal-submit {
+    background: #DE4BB1;
+    color: white;
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
+}
+.post-modal-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.post-modal-submit:hover:not(:disabled) {
+    background: #218838;
+}
+
+/* Nút hủy */
+.post-modal-close {
+    background: #db505e;
+    color: white;
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
+    margin-left: 20px;
+}
+.post-modal-close:hover {
+    background: #c82333;
+}
+
+/* Nút chọn lại và OK */
+.post-modal-reselect, .post-modal-confirm {
+    background: white;
+    color: #DE4BB1;
+    box-shadow: 0 4px 6px rgba(146, 69, 122, 0.3);
+}
+.post-modal-reselect:hover, .post-modal-confirm:hover {
+    background: #ce91bc;
+}
+.post-modal-reselect {
+    margin-right: 15px; /* Tăng khoảng cách với nút kế bên */
+}

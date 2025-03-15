@@ -1,40 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import axios from 'axios';  // Import axios
 import './orderTable.css';  // Import CSS
 
 const OrderTable = ({ filter }) => {
-  // Giả lập dữ liệu đơn hàng
-  const orders = [
-    {
-      id: 1,
-      date: "2025-01-10",
-      price: 500000,
-      status: "Đã Giao Hàng",
-      items: [{ id: 101, name: "Nhẫn Kim Cương", image: "/images/ring.jpg", quantity: 1, price: 500000 }],
-    },
-    {
-      id: 2,
-      date: "2025-01-12",
-      price: 250000,
-      status: "Đã Gửi Hàng Đi",
-      items: [{ id: 102, name: "Dây Chuyền Vàng", image: "/images/necklace.jpg", quantity: 1, price: 250000 }],
-    },
-    {
-      id: 3,
-      date: "2025-01-13",
-      price: 300000,
-      status: "Đang Giao",
-      items: [{ id: 103, name: "Bông Tai Bạc", image: "/images/earring.jpg", quantity: 2, price: 150000 }],
-    },
-    {
-      id: 4,
-      date: "2025-01-14",
-      price: 150000,
-      status: "Đã Tiếp Nhận",
-      items: [{ id: 104, name: "Nhẫn Vàng", image: "/images/gold-ring.jpg", quantity: 1, price: 150000 }],
-    },
-  ];
+  const [orders, setOrders] = useState([]);  // State để lưu danh sách đơn hàng
+  const [loading, setLoading] = useState(true);  // State để kiểm tra trạng thái loading
+
+  // Lấy danh sách đơn hàng từ API sử dụng axios
+  useEffect(() => {
+    axios
+      .get('http://localhost:2000/orders/all')  // Đảm bảo đường dẫn API đúng
+      .then((response) => {
+        setOrders(response.data);  // Lưu dữ liệu vào state
+        setLoading(false);  // Đặt loading = false khi dữ liệu đã được tải xong
+      })
+      .catch((error) => {
+        console.error('Lỗi khi lấy đơn hàng:', error);
+        setLoading(false);  // Đặt loading = false nếu có lỗi xảy ra
+      });
+  }, []);  // Chạy effect chỉ khi component mount
 
   // Lọc các đơn hàng theo trạng thái nếu có filter
   const filteredOrders = filter
@@ -59,37 +45,40 @@ const OrderTable = ({ filter }) => {
 
   return (
     <TableContainer className="table-container">
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Mã Đơn Hàng</strong></TableCell>
-            <TableCell><strong>Ngày</strong></TableCell>
-            <TableCell><strong>Tổng</strong></TableCell>
-            <TableCell><strong>Trạng thái đơn hàng</strong></TableCell>
-            <TableCell><strong>Thao tác</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {filteredOrders.map((order) => (
-            <TableRow key={order.id}>
-              <TableCell>{order.id}</TableCell>
-              <TableCell>{order.date}</TableCell>
-              <TableCell>{order.price.toLocaleString()} VND</TableCell>
-              <TableCell>
-                <span className={`status-cell ${getStatusClass(order.status)}`}>
-                  {order.status}
-                </span>
-              </TableCell>
-              <TableCell>
-              <Link to={`/orders/${order.id}`} style={{ textDecoration: "none" }}>
-                  <Button variant="contained" color="primary">Xem Chi Tiết</Button>
-               </Link>
-
-              </TableCell>
+      {loading ? (
+        <p>Đang tải dữ liệu đơn hàng...</p>  // Hiển thị khi đang tải dữ liệu
+      ) : (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Mã Đơn Hàng</strong></TableCell>
+              <TableCell><strong>Ngày</strong></TableCell>
+              <TableCell><strong>Tổng</strong></TableCell>
+              <TableCell><strong>Trạng thái đơn hàng</strong></TableCell>
+              <TableCell><strong>Thao tác</strong></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {filteredOrders.map((order) => (
+              <TableRow key={order.id}>
+                <TableCell>{order.id}</TableCell>
+                <TableCell>{order.created_at.split('T')[0]}</TableCell>  {/* Hiển thị ngày (nếu trả về kiểu ISO 8601) */}
+                <TableCell>{order.total.toLocaleString()} VND</TableCell>
+                <TableCell>
+                  <span className={`status-cell ${getStatusClass(order.status)}`}>
+                    {order.status}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <Link to={`/orders/${order.id}`} style={{ textDecoration: "none" }}>
+                    <Button variant="contained" color="primary">Xem Chi Tiết</Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </TableContainer>
   );
 };

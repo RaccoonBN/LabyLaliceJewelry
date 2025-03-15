@@ -12,8 +12,9 @@ const ProductManagement = () => {
 
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 20;
+  const productsPerPage = 16;
 
+  
   // Bộ lọc & Sắp xếp
   const [categories, setCategories] = useState([]);
   const [collections, setCollections] = useState([]);
@@ -23,6 +24,18 @@ const ProductManagement = () => {
   const [sortOrder, setSortOrder] = useState("newest");
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const totalPages = Math.ceil(products.length / productsPerPage);
+  
+  // Lấy danh sách sản phẩm hiển thị theo trang
+  const displayedProducts = products.slice(
+    (currentPage - 1) * productsPerPage,
+    currentPage * productsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  
 
   // Gọi API lấy danh mục & bộ sưu tập
   useEffect(() => {
@@ -180,51 +193,58 @@ console.log("🟢 Danh sách sản phẩm sau khi lọc:", filteredProducts);
 
 
         {/* Danh sách sản phẩm */}
-      <div className="product-list">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <div key={product.id} className="product-card">
-              <img
-                src={product.image ? product.image : demosp}
-                alt={product.name}
-                className="product-image"
-              />
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-category">
-                {product.category_name} - {product.collection_name}
-              </p>
-              <p className="product-price">
-                {new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
-                }).format(Number(product.price))}
-              </p>
-              <p className="product-stock">Số lượng: {product.stock}</p>
-              <div className="product-actions">
-                <button className="edit-button" onClick={() => openModal(product)}>
-                  <FaEdit />
-                </button>
-                <button className="delete-button" onClick={() => handleDelete(product.id)}>
-                  <FaTrash />
-                </button>
+        <div className="product-list">
+          {currentProducts.length > 0 ? (
+            currentProducts.map((product) => (
+              <div key={product.id} className="product-card">
+                <img
+                  src={product.image ? product.image : demosp}
+                  alt={product.name}
+                  className="product-image"
+                />
+                <h3 className="product-name">{product.name}</h3>
+                <p className="product-category">
+                  {product.category_name} - {product.collection_name}
+                </p>
+                <p className="product-price">
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }).format(Number(product.price))}
+                </p>
+                <p className="product-stock">Số lượng: {product.stock}</p>
+                <div className="product-actions">
+                  <button className="edit-button" onClick={() => openModal(product)}>
+                    <FaEdit />
+                  </button>
+                  <button className="delete-button" onClick={() => handleDelete(product.id)}>
+                    <FaTrash />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p>Không có sản phẩm nào phù hợp.</p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p>Không có sản phẩm nào phù hợp.</p>
+          )}
+        </div>
 
-      {/* Phân trang */}
-      <div className="pagination">
-        {Array.from({ length: Math.ceil(filteredProducts.length / productsPerPage) }, (_, i) => (
-          <button key={i} onClick={() => setCurrentPage(i + 1)} className={currentPage === i + 1 ? "active" : ""}>
-            {i + 1}
-          </button>
-        ))}
-      </div>
+        {/* Phân trang */}
+        <div className="pagination">
+          {Array.from({ length: Math.ceil(filteredProducts.length / productsPerPage) }, (_, index) => index + 1).map(
+            (page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={page === currentPage ? "active" : ""}
+              >
+                {page}
+              </button>
+            )
+          )}
+        </div>
+
 
       {/* Modal */}
       {isModalOpen && (
