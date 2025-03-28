@@ -10,6 +10,8 @@ const collectionRoutes = require("./routes/collectionRoutes");
 const path = require("path");
 const  productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes")
+const blogRoutes = require("./routes/blogRoutes");
+const homeRoutes = require("./routes/homeRoutes");
 
 // Middleware để xử lý JSON
 app.use(bodyParser.json());
@@ -22,6 +24,8 @@ app.use("/users", userRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/collections", collectionRoutes);
 app.use("/orders", orderRoutes);
+app.use("/blogs", blogRoutes);
+app.use("/home", homeRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
