@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db"); // Import connection pool
 
-// 🛒 API: Lấy danh sách sản phẩm (có thể lọc theo collection_id)
+// 🛒 API: Lấy danh sách sản phẩm (có thể lọc theo collection_id VÀ tìm kiếm)
 router.get("/", async (req, res) => {
   let connection;
   try {
     connection = await pool.getConnection(); // Lấy kết nối từ pool
     const collection_id = req.query.collection_id;
-    let query = `
+    const query = req.query.q; // Lấy từ khóa tìm kiếm từ query params
+
+    let sqlQuery = `
       SELECT 
         p.id, p.name, p.description, p.price, p.stock, p.image, 
         p.category_id, c.name AS category_name, 
@@ -16,15 +18,24 @@ router.get("/", async (req, res) => {
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN collections col ON p.collection_id = col.id
+      WHERE 1=1 -- Điều kiện luôn đúng để dễ dàng thêm các điều kiện khác
     `;
 
     let params = [];
+
     if (collection_id) {
-      query += " WHERE p.collection_id = ?";
+      sqlQuery += " AND p.collection_id = ?";
       params.push(collection_id);
     }
 
-    const [results] = await connection.execute(query, params);
+    if (query) {
+      sqlQuery += " AND (p.name LIKE ? OR c.name LIKE ? OR col.name LIKE ?)";
+      params.push(`%${query}%`);
+      params.push(`%${query}%`);
+      params.push(`%${query}%`);
+    }
+
+    const [results] = await connection.execute(sqlQuery, params);
 
     // Xử lý ảnh mặc định nếu không có ảnh
     const formattedResults = results.map(product => {
@@ -107,37 +118,38 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// 🔍 API: Tìm kiếm sản phẩm theo tên, danh mục hoặc bộ sưu tập
-router.get("/search", async (req, res) => {
-  let connection;
-  try {
-    connection = await pool.getConnection(); // Lấy kết nối từ pool
-    const { query } = req.query;
-    if (!query) {
-      return res.json([]);
-    }
+// **LOẠI BỎ API NÀY**
+// // 🔍 API: Tìm kiếm sản phẩm theo tên, danh mục hoặc bộ sưu tập
+// router.get("/search", async (req, res) => {
+//   let connection;
+//   try {
+//     connection = await pool.getConnection(); // Lấy kết nối từ pool
+//     const { query } = req.query;
+//     if (!query) {
+//       return res.json([]);
+//     }
 
-    const searchQuery = `
-      SELECT p.id, p.name, p.image, p.price, c.name AS category_name, col.name AS collection_name
-      FROM products p
-      LEFT JOIN categories c ON p.category_id = c.id
-      LEFT JOIN collections col ON p.collection_id = col.id
-      WHERE p.name LIKE ? 
-         OR c.name LIKE ? 
-         OR col.name LIKE ? 
-    `;
+//     const searchQuery = `
+//       SELECT p.id, p.name, p.image, p.price, c.name AS category_name, col.name AS collection_name
+//       FROM products p
+//       LEFT JOIN categories c ON p.category_id = c.id
+//       LEFT JOIN collections col ON p.collection_id = col.id
+//       WHERE p.name LIKE ? 
+//          OR c.name LIKE ? 
+//          OR col.name LIKE ? 
+//     `;
 
-    const [results] = await connection.execute(searchQuery, [`%${query}%`, `%${query}%`, `%${query}%`]);
+//     const [results] = await connection.execute(searchQuery, [`%${query}%`, `%${query}%`, `%${query}%`]);
 
-    res.json(results);
-  } catch (err) {
-    console.error("Lỗi khi tìm kiếm sản phẩm:", err);
-    return res.status(500).json({ error: "Lỗi khi tìm kiếm sản phẩm" });
-  } finally {
-    if (connection) {
-      connection.release(); // Trả kết nối về pool
-    }
-  }
-});
+//     res.json(results);
+//   } catch (err) {
+//     console.error("Lỗi khi tìm kiếm sản phẩm:", err);
+//     return res.status(500).json({ error: "Lỗi khi tìm kiếm sản phẩm" });
+//   } finally {
+//     if (connection) {
+//       connection.release(); // Trả kết nối về pool
+//     }
+//   }
+// });
 
 module.exports = router;

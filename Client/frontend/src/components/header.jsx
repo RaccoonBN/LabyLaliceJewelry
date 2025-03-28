@@ -23,10 +23,11 @@ const Header = () => {
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
-      navigate(`/AllProduct?search=${encodeURIComponent(searchQuery)}`);
+      // SỬA ĐỔI QUAN TRỌNG: Tạo URL đúng với route và query parameter
+      navigate(`/all-products?q=${encodeURIComponent(searchQuery)}`);
     }
   };
-  
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -65,7 +66,7 @@ const Header = () => {
     try {
       const response = await axios.get(`http://localhost:2000/cart/count/${userId}`);
       console.log("Dữ liệu giỏ hàng từ API:", response.data);
-      
+
       // Chuyển total_count thành số (number)
       const count = Number(response.data.total_count);
       setCartCount(count);
@@ -73,7 +74,6 @@ const Header = () => {
       console.error("Lỗi khi lấy số lượng giỏ hàng:", error);
     }
   };
-  
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -101,8 +101,8 @@ const Header = () => {
             />
           </div>
           <div className="logo" onClick={() => {
-              setSelectedItem(null); // Bỏ chọn tất cả menu
-              navigate("/");
+            setSelectedItem(null); // Bỏ chọn tất cả menu
+            navigate("/");
           }}>
             <img src={logo} alt="Logo" />
           </div>
@@ -117,12 +117,12 @@ const Header = () => {
 
                 {/* 🛒 Icon giỏ hàng */}
                 <div className="icon-container">
-                <FaShoppingCart className="icon" onClick={handleCartClick} />
-                {cartCount > 0 ? (
-                  <span className="badge">{cartCount}</span>
-                ) : (
-                  console.log("Giỏ hàng trống, không hiển thị badge")
-                )}
+                  <FaShoppingCart className="icon" onClick={handleCartClick} />
+                  {cartCount > 0 ? (
+                    <span className="badge">{cartCount}</span>
+                  ) : (
+                    console.log("Giỏ hàng trống, không hiển thị badge")
+                  )}
                 </div>
 
                 {/* 👤 User Icon */}
@@ -160,7 +160,7 @@ const Header = () => {
             {dropdownOpen === "collection" && <DropdownMenu />}
           </div>
           <div className={`menu-item ${selectedItem === "products" ? "active" : ""}`} onClick={() => setSelectedItem("products")}>
-            <Link to="/AllProduct">SẢN PHẨM</Link>
+            <Link to="/all-products">SẢN PHẨM</Link>
           </div>
           <div className={`menu-item ${selectedItem === "news" ? "active" : ""}`} onClick={() => setSelectedItem("news")}>
             <Link to="/BlogPage">BLOG TIN TỨC</Link>

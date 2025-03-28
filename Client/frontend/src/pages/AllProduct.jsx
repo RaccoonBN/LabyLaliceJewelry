@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom"; // Lấy query params
+import { useLocation, Link } from "react-router-dom"; // Thêm Link để điều hướng
 import "./AllProduct.css";
 import ProductCard from "../components/productCard";
 
@@ -14,22 +14,33 @@ const AllProduct = () => {
   const [error, setError] = useState(null);
   const productsPerPage = 20;
 
-  // Lấy từ khóa tìm kiếm từ URL query params
+  // Lấy từ khóa tìm kiếm và collection_id từ URL query params
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchKeyword = searchParams.get("q") || ""; // Lấy giá trị 'q', nếu không có thì rỗng
+  const collectionId = searchParams.get("collection") || ""; // Lấy giá trị 'collection', nếu không có thì rỗng
 
-  // Gọi API lấy danh sách sản phẩm
+  // Gọi API lấy danh sách sản phẩm (SỬA ĐỔI QUAN TRỌNG)
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        let response;
+        let apiUrl = "http://localhost:2000/products?"; // Base URL
+
+        // Thêm query parameters nếu có
         if (searchKeyword) {
-          response = await axios.get(`http://localhost:2000/products/search?query=${searchKeyword}`);
-        } else {
-          response = await axios.get("http://localhost:2000/products");
+          apiUrl += `q=${searchKeyword}&`;
         }
+        if (collectionId) {
+          apiUrl += `collection_id=${collectionId}&`;
+        }
+
+        // Xóa dấu '&' cuối cùng nếu có
+        if (apiUrl.endsWith('&')) {
+          apiUrl = apiUrl.slice(0, -1);
+        }
+
+        const response = await axios.get(apiUrl); // Gọi API
         console.log("Dữ liệu sản phẩm trả về:", response.data); // Debug dữ liệu API
         setProducts(response.data);
       } catch (error) {
@@ -39,10 +50,9 @@ const AllProduct = () => {
         setLoading(false);
       }
     };
-  
+
     fetchProducts();
-  }, [searchKeyword]);
-  
+  }, [searchKeyword, collectionId]); // Quan trọng: Thêm collectionId vào dependencies
 
   // Gọi API lấy danh mục sản phẩm
   useEffect(() => {
@@ -69,7 +79,7 @@ const AllProduct = () => {
     setCurrentPage(1);
   };
 
-  // Lọc sản phẩm theo danh mục, giá và từ khóa tìm kiếm
+  // Lọc sản phẩm theo danh mục, giá (LOẠI BỎ LỌC THEO TỪ KHÓA)
   const filteredProducts = products.filter((product) => {
     const categoryMatch =
       category === "all" || parseInt(product.category_id) === parseInt(category);
@@ -80,10 +90,10 @@ const AllProduct = () => {
       (priceRange === "medium" && parseInt(product.price) > 3000000 && parseInt(product.price) <= 7000000) ||
       (priceRange === "high" && parseInt(product.price) > 7000000);
 
-    const searchMatch =
-      searchKeyword === "" || product.name.toLowerCase().includes(searchKeyword.toLowerCase());
+    // const searchMatch = // LOẠI BỎ, ĐÃ LỌC Ở API
+    //   searchKeyword === "" || product.name.toLowerCase().includes(searchKeyword.toLowerCase());
 
-    return categoryMatch && priceMatch && searchMatch;
+    return categoryMatch && priceMatch; //Loại bỏ && searchMatch;
   });
 
   // Tính tổng số trang
@@ -134,15 +144,14 @@ const AllProduct = () => {
         <div className="all-products">
           {displayedProducts.length > 0 ? (
             displayedProducts.map((product) => (
-          <ProductCard
-            id={product.id}  // Thêm ID để xử lý chuyển trang
-            key={product.id}
-            image={product.image}
-            collectionName={product.collection_name}
-            productName={product.name}
-            price={product.price}
-          />
-
+              <ProductCard
+                id={product.id}  // Thêm ID để xử lý chuyển trang
+                key={product.id}
+                image={product.image}
+                collectionName={product.collection_name}
+                productName={product.name}
+                price={product.price}
+              />
             ))
           ) : (
             <p>Không tìm thấy sản phẩm phù hợp.</p>
