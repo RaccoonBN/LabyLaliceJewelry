@@ -1,33 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaCheckCircle, FaRegCircle } from "react-icons/fa";
-import "./NotificationModal.css"; // Thêm CSS cho modal
+import "./NotificationModal.css";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const NotificationModal = ({ isOpen, onClose }) => {
-  // Danh sách thông báo
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: "Thông báo 1", read: false },
-    { id: 2, message: "Thông báo 2", read: false },
-    { id: 3, message: "Thông báo 3", read: true },
-    { id: 4, message: "Thông báo 4", read: false },
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  // Đánh dấu thông báo là đã đọc
-  const markAsRead = (id) => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((notification) =>
-        notification.id === id ? { ...notification, read: true } : notification
-      )
-    );
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:2000/auth/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUserId(response.data.id);
+        } catch (error) {
+          console.error("Lỗi khi lấy thông tin người dùng:", error);
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (userId) {
+        try {
+          const response = await axios.get(`http://localhost:2000/notifications?userId=${userId}`);
+
+          // Kiểm tra phản hồi từ API
+          if (response.data && typeof response.data === 'object' && Array.isArray(response.data.notifications)) {
+            setNotifications(response.data.notifications); // Truy cập thuộc tính notifications
+            setUnreadCount(response.data.unreadCount);       // Truy cập thuộc tính unreadCount
+          } else {
+            console.error("Dữ liệu trả về từ API không hợp lệ:", response.data);
+            setNotifications([]); // Đặt là một mảng rỗng để tránh lỗi
+            setUnreadCount(0);     // Đặt số lượng chưa đọc về 0
+          }
+        } catch (error) {
+          console.error("Lỗi khi lấy thông báo:", error);
+          setNotifications([]); // Đặt là một mảng rỗng để tránh lỗi
+          setUnreadCount(0);     // Đặt số lượng chưa đọc về 0
+        }
+      }
+    };
+
+    if (isOpen && userId) {
+      fetchNotifications();
+    }
+  }, [isOpen, userId]);
+
+  const markAsRead = async (id) => {
+    try {
+      await axios.put(`http://localhost:2000/notifications/${id}/read`);
+      setNotifications(prevNotifications => // Sử dụng functional update
+        prevNotifications.map((notification) =>
+          notification.id === id ? { ...notification, is_read: true } : notification
+        )
+      );
+      setUnreadCount(unreadCount - 1);
+    } catch (error) {
+      console.error("Lỗi khi đánh dấu thông báo là đã đọc:", error);
+    }
   };
 
-  // Đánh dấu tất cả là đã đọc
-  const markAllAsRead = () => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((notification) => ({
-        ...notification,
-        read: true,
-      }))
-    );
+  const markAllAsRead = async () => {
+    if (userId) {
+      try {
+        await axios.put(`http://localhost:2000/notifications/mark-all-read`, { userId: userId });
+        setNotifications(prevNotifications => // Sử dụng functional update
+          prevNotifications.map((notification) => ({ ...notification, ...{ is_read: true } }))
+        );
+        setUnreadCount(0);
+      } catch (error) {
+        console.error("Lỗi khi đánh dấu tất cả thông báo là đã đọc:", error);
+      }
+    }
   };
 
   return (
@@ -44,25 +98,37 @@ const NotificationModal = ({ isOpen, onClose }) => {
             Đánh dấu tất cả là đã đọc
           </button>
           <ul className="custom-notification-list">
-            {notifications.map((notification) => (
-              <li key={notification.id} className={notification.read ? "read" : ""}>
-                <div className="custom-notification-item">
-                  <span
-                    onClick={() => markAsRead(notification.id)}
-                    className="custom-notification-icon"
-                  >
-                    {notification.read ? (
-                      <FaCheckCircle />
-                    ) : (
-                      <FaRegCircle />
-                    )}
-                  </span>
-                  <span className="custom-notification-message">
-                    {notification.message}
-                  </span>
-                </div>
-              </li>
-            ))}
+            {notifications.map((notification) => {
+              const notificationData = notification.data ? JSON.parse(notification.data) : null;
+
+              return (
+                <li key={notification.id} className={notification.is_read ? "read" : ""}>
+                  <div className="custom-notification-item">
+                    <span
+                      onClick={() => markAsRead(notification.id)}
+                      className="custom-notification-icon"
+                    >
+                      {notification.is_read ? (
+                        <FaCheckCircle />
+                      ) : (
+                        <FaRegCircle />
+                      )}
+                    </span>
+                    <span className="custom-notification-message">
+                      {notification.type === "order_update" && notificationData && (
+                        <Link to={`/orders/${notificationData.orderId}`}>{notification.message}</Link>
+                      )}
+                      {notification.type === "blog_like" && notificationData && (
+                        <Link to={`/news/${notificationData.blogId}`}>{notification.message}</Link>
+                      )}
+                      {notification.type !== "order_update" && notification.type !== "blog_like" && (
+                        <span>{notification.message}</span>
+                      )}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

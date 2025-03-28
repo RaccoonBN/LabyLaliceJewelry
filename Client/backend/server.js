@@ -15,6 +15,7 @@ const postRoutes = require("./routes/post")
 const collectionRoutes = require("./routes/collection")
 const app = express();
 const PORT = 2000;
+const notificationsRoutes = require("./routes/notifications"); // Import routes
 
 // Middleware xử lý JSON & CORS
 app.use(bodyParser.json());
@@ -35,6 +36,7 @@ app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/post", postRoutes);
 app.use("/collections", collectionRoutes);
+app.use("/notifications", notificationsRoutes); // Mount routes
 
 // Khởi động server
 app.listen(PORT, () => {

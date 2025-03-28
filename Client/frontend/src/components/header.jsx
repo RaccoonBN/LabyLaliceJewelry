@@ -1,5 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { FaSearch, FaBell, FaShoppingCart, FaUser, FaCog, FaHistory, FaSignOutAlt } from "react-icons/fa";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  FaSearch,
+  FaBell,
+  FaShoppingCart,
+  FaUser,
+  FaCog,
+  FaHistory,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,14 +24,13 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
-  const [notificationCount, setNotificationCount] = useState(3); // Giả định có thông báo
+  const [unreadCount, setUnreadCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
-      // SỬA ĐỔI QUAN TRỌNG: Tạo URL đúng với route và query parameter
       navigate(`/all-products?q=${encodeURIComponent(searchQuery)}`);
     }
   };
@@ -59,6 +66,7 @@ const Header = () => {
   useEffect(() => {
     if (user?.id) {
       fetchCartCount(user.id);
+      fetchUnreadCount(user.id); // Lấy số lượng thông báo chưa đọc
     }
   }, [user]);
 
@@ -75,8 +83,21 @@ const Header = () => {
     }
   };
 
+  const fetchUnreadCount = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:2000/notifications/count?userId=${userId}`);
+      setUnreadCount(response.data.unreadCount); // Cập nhật state
+    } catch (error) {
+      console.error("Lỗi khi lấy số lượng thông báo chưa đọc:", error);
+    }
+  };
+
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    fetchUnreadCount(user?.id);  // Refresh count when modal closes
+  };
+
   const handleUserIconClick = () => isLoggedIn && setIsUserDropdownOpen(prev => !prev);
   const handleCartClick = () => navigate(isLoggedIn ? "/cart" : "/login");
   const handleLogout = () => {
@@ -112,7 +133,7 @@ const Header = () => {
                 {/* 🔔 Icon thông báo */}
                 <div className="icon-container">
                   <FaBell className="icon" onClick={openModal} />
-                  {notificationCount > 0 && <span className="badge">{notificationCount}</span>}
+                  {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
                 </div>
 
                 {/* 🛒 Icon giỏ hàng */}
@@ -166,7 +187,11 @@ const Header = () => {
             <Link to="/BlogPage">BLOG TIN TỨC</Link>
           </div>
         </div>
-        <NotificationModal isOpen={isModalOpen} onClose={closeModal} />
+        <NotificationModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          userId={user?.id}
+        />
       </header>
     </>
   );
