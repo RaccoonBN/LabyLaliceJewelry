@@ -25,179 +25,173 @@ router.get('/all/:userId', async (req, res) => {
     }
 });
 
-
 router.post("/", async (req, res) => {
-    let connection;
-    try {
-        connection = await pool.getConnection();
-        await connection.beginTransaction();  // Start transaction
+  let connection;
+  try {
+      connection = await pool.getConnection();
+      await connection.beginTransaction(); // Bắt đầu transaction
 
-        const { userId, items, totalAmount, name, address, phone, paymentMethod } = req.body;
+      const { userId, items, totalAmount, name, address, phone, paymentMethod } = req.body;
 
-        if (!userId || !items || !totalAmount || !name || !address || !phone || !paymentMethod) {
-            return res.status(400).json({ message: "Missing required fields" });
-        }
+      // Kiểm tra dữ liệu đầu vào
+      if (!userId || !items || !totalAmount || !name || !address || !phone || !paymentMethod) {
+          return res.status(400).json({ message: "Thiếu thông tin bắt buộc" });
+      }
 
-        const orderStatus = "Đã Tiếp Nhận";
-        let paymentStatus = paymentMethod === "cod" ? "Chưa Thanh Toán" : "Đã Thanh Toán";
+      const orderStatus = "Đã Tiếp Nhận";
+      let paymentStatus = paymentMethod === "cod" ? "Chưa Thanh Toán" : "Đã Thanh Toán";
 
-        const orderQuery = `INSERT INTO orders (user_id, fullname, phone, address, total, payment_method, payment_status, status, created_at)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`;
+      // Tạo đơn hàng
+      const orderQuery = `
+          INSERT INTO orders (user_id, fullname, phone, address, total, payment_method, payment_status, status, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`;
+      const [result] = await connection.execute(orderQuery, [userId, name, phone, address, totalAmount, paymentMethod, paymentStatus, orderStatus]);
 
-        const [result] = await connection.execute(orderQuery, [userId, name, phone, address, totalAmount, paymentMethod, paymentStatus, orderStatus]);
-        const orderId = result.insertId;
+      const orderId = result.insertId;
+      if (!orderId) {
+          throw new Error("Không thể lấy ID đơn hàng sau khi tạo");
+      }
 
-        if (!orderId) {
-            return res.status(500).json({ message: "Failed to retrieve order ID after inserting order" });
-        }
+      // Lấy danh sách ID sản phẩm
+      const productIds = items.map(item => item.id);
+      if (productIds.length === 0) {
+          throw new Error("Không có sản phẩm hợp lệ");
+      }
 
-        const productIds = items.map(item => item.id);
-        const checkProductQuery = `SELECT id, price, stock FROM products WHERE id IN (?)`;
-        const [products] = await connection.execute(checkProductQuery, [productIds]);
+      // Kiểm tra sản phẩm có tồn tại và tồn kho
+      const placeholders = productIds.map(() => "?").join(",");
+      const checkProductQuery = `SELECT id, price, stock FROM products WHERE id IN (${placeholders})`;
+      const [products] = await connection.execute(checkProductQuery, productIds);
 
-        if (!products || products.length === 0) {
-            return res.status(400).json({ message: "No valid products found", productIds });
-        }
+      if (!products || products.length === 0) {
+          throw new Error("Không tìm thấy sản phẩm hợp lệ");
+      }
 
-        const validProductIds = products.map(product => product.id);
-        const invalidItems = items.filter(item => !validProductIds.includes(item.id));
+      const validProductIds = products.map(p => p.id);
+      const invalidItems = items.filter(item => !validProductIds.includes(item.id));
 
-        if (invalidItems.length > 0) {
-            return res.status(400).json({ message: "Some products are not valid", invalidItems });
-        }
+      if (invalidItems.length > 0) {
+          throw new Error(`Các sản phẩm sau không hợp lệ: ${invalidItems.map(i => i.id).join(", ")}`);
+      }
 
-        // Tính toán giá trị từng sản phẩm và kiểm tra tồn kho
-        const orderItemsValues = [];
-        const stockUpdates = [];
+      // Xử lý đặt hàng và cập nhật tồn kho
+      const orderItemsValues = [];
+      const stockUpdates = [];
 
-        for (let item of items) {
-            const product = products.find(p => p.id === item.id);
-            if (!product) continue;
+      for (let item of items) {
+          const productId = Number(item.id); // Ép kiểu chính xác
+          const product = products.find(p => p.id === productId);
 
-            if (product.stock < item.quantity) {
-                await connection.rollback(); // Rollback if not enough stock
-                return res.status(400).json({
-                    message: `Not enough stock for product ${item.id}`,
-                    productId: item.id,
-                    availableStock: product.stock,
-                });
-            }
+          if (!product) continue;
+          if (product.stock < item.quantity) {
+              throw new Error(`Không đủ hàng cho sản phẩm ${productId} (Còn: ${product.stock})`);
+          }
 
-            const price = parseFloat(product.price);
-            const totalPrice = price * item.quantity;
-            orderItemsValues.push([orderId, item.id, item.quantity, totalPrice]);
+          const totalPrice = parseFloat(product.price) * item.quantity;
+          orderItemsValues.push([orderId, productId, item.quantity, totalPrice]);
 
-            // Chuẩn bị câu lệnh cập nhật tồn kho
-            stockUpdates.push({
-                id: item.id,
-                newStock: product.stock - item.quantity,
-            });
-        }
+          stockUpdates.push({ id: productId, newStock: product.stock - item.quantity });
+      }
 
-        if (orderItemsValues.length === 0) {
-            return res.status(400).json({ message: "No valid items to insert" });
-        }
+      if (orderItemsValues.length === 0) {
+          throw new Error("Không có sản phẩm hợp lệ để đặt hàng");
+      }
 
-        const orderItemsQuery = `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ?`;
-        await connection.execute(orderItemsQuery, [orderItemsValues]);
+      // Chèn vào bảng order_items
+      const orderItemsQuery = `INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ?`;
+      await connection.query(orderItemsQuery, [orderItemsValues]);
 
+      // Cập nhật tồn kho sản phẩm
+      for (let item of stockUpdates) {
+          await connection.execute(`UPDATE products SET stock = ? WHERE id = ?`, [item.newStock, item.id]);
+      }
 
-        // **Cập nhật tồn kho của sản phẩm**
-        for (let item of stockUpdates) {
-            await connection.execute(`UPDATE products SET stock = ? WHERE id = ?`, [item.newStock, item.id]);
-        }
+      await connection.commit(); // Xác nhận transaction
 
-        await connection.commit(); // Commit the transaction
-
-        res.status(201).json({
-            message: "Order created successfully",
-            orderId: orderId,
-            items: items,
-            totalAmount: totalAmount,
-            paymentMethod: paymentMethod,
-            paymentStatus: paymentStatus,
-            status: orderStatus,
-        });
-    } catch (err) {
-        if (connection) await connection.rollback(); // Rollback in case of any error
-        console.error("Lỗi khi tạo đơn hàng:", err);
-        return res.status(500).json({ message: "Lỗi khi tạo đơn hàng", error: err.message });
-    } finally {
-        if (connection) {
-            connection.release();
-        }
-    }
+      res.status(201).json({
+          message: "Tạo đơn hàng thành công",
+          orderId,
+          items,
+          totalAmount,
+          paymentMethod,
+          paymentStatus,
+          status: orderStatus,
+      });
+  } catch (err) {
+      if (connection) await connection.rollback(); // Rollback nếu có lỗi
+      console.error("Lỗi khi tạo đơn hàng:", err.message);
+      return res.status(500).json({ message: "Lỗi khi tạo đơn hàng", error: err.message });
+  } finally {
+      if (connection) connection.release(); // Giải phóng kết nối
+  }
 });
 
-
 router.get('/:orderId', async (req, res) => {
-    let connection;
-    try {
-        connection = await pool.getConnection();
-        const { orderId } = req.params;
+  let connection;
+  try {
+      connection = await pool.getConnection();
+      const { orderId } = req.params;
 
-        // Truy vấn thông tin đơn hàng từ bảng orders
-        const orderQuery = `
-            SELECT id, user_id, fullname, email, phone, address, total, status, payment_method, payment_status, created_at 
-            FROM orders 
-            WHERE id = ?
-        `;
+      // Truy vấn thông tin đơn hàng từ bảng orders
+      const orderQuery = `
+          SELECT id, user_id, fullname, phone, address, total, status, payment_method, payment_status, created_at 
+          FROM orders 
+          WHERE id = ?
+      `;
 
-        const [result] = await connection.execute(orderQuery, [orderId]);
+      const [result] = await connection.execute(orderQuery, [orderId]);
 
-        if (result.length === 0) {
-            return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
-        }
+      if (result.length === 0) {
+          return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+      }
 
-        const order = result[0];
+      const order = result[0];
 
-        // Truy vấn thông tin sản phẩm trong đơn hàng, kết hợp với bảng products
-        const orderItemsQuery = `
-            SELECT oi.id, oi.quantity, oi.price, 
-                   p.id AS product_id, p.name AS product_name, p.description, 
-                   p.image AS product_image, p.stock, p.category_id, p.collection_id
-            FROM order_items oi
-            JOIN products p ON oi.product_id = p.id
-            WHERE oi.order_id = ?
-        `;
+      // Truy vấn thông tin sản phẩm trong đơn hàng, lấy giá từ bảng products
+      const orderItemsQuery = `
+          SELECT oi.id, oi.quantity, 
+                 p.id AS product_id, p.name AS product_name, p.description, 
+                 p.image AS product_image, p.price, p.stock, p.category_id, p.collection_id
+          FROM order_items oi
+          JOIN products p ON oi.product_id = p.id
+          WHERE oi.order_id = ?
+      `;
 
-        const [items] = await connection.execute(orderItemsQuery, [orderId]);
+      const [items] = await connection.execute(orderItemsQuery, [orderId]);
 
-
-        res.status(200).json({
-            orderId: order.id,
-            userId: order.user_id,
-            fullname: order.fullname,
-            email: order.email,
-            phone: order.phone,
-            address: order.address,
-            totalAmount: order.total,
-            paymentMethod: order.payment_method,
-            paymentStatus: order.payment_status,  // Thêm trạng thái thanh toán
-            status: order.status,
-            createdAt: order.created_at,
-            items: items.map((item) => ({
-                id: item.id,
-                productId: item.product_id,
-                name: item.product_name,
-                description: item.description,
-                image: item.product_image,
-                quantity: item.quantity,
-                price: item.price,
-                total: item.quantity * item.price,
-                stock: item.stock,  // Thêm thông tin tồn kho
-                categoryId: item.category_id,
-                collectionId: item.collection_id,
-            })),
-        });
-    } catch (err) {
-        console.error("Lỗi khi lấy thông tin chi tiết đơn hàng:", err);
-        return res.status(500).json({ message: "Lỗi khi lấy thông tin chi tiết đơn hàng", error: err.message });
-    } finally {
-        if (connection) {
-            connection.release();
-        }
-    }
+      res.status(200).json({
+          orderId: order.id,
+          userId: order.user_id,
+          fullname: order.fullname,
+          phone: order.phone,
+          address: order.address,
+          totalAmount: order.total,
+          paymentMethod: order.payment_method,
+          paymentStatus: order.payment_status, 
+          status: order.status,
+          createdAt: order.created_at,
+          items: items.map((item) => ({
+              id: item.product_id,
+              productId: item.product_id,
+              name: item.product_name,
+              description: item.description,
+              image: item.product_image,
+              quantity: item.quantity,
+              price: item.price, // Lấy price từ bảng products
+              total: item.quantity * item.price, // Tính lại total
+              stock: item.stock,  
+              categoryId: item.category_id,
+              collectionId: item.collection_id,
+          })),
+      });
+  } catch (err) {
+      console.error("Lỗi khi lấy thông tin chi tiết đơn hàng:", err);
+      return res.status(500).json({ message: "Lỗi khi lấy thông tin chi tiết đơn hàng", error: err.message });
+  } finally {
+      if (connection) {
+          connection.release();
+      }
+  }
 });
 
 

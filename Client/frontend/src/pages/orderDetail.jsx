@@ -13,7 +13,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import "./orderDetail.css";
-import demosp from "../assets/demosp.png"; // Ảnh mặc định nếu sản phẩm không có ảnh
 
 const OrderDetail = () => {
   const { id } = useParams();

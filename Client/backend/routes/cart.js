@@ -9,11 +9,10 @@ router.get('/:userId', async (req, res) => {
         connection = await pool.getConnection();
         const userId = req.params.userId;
         const [result] = await connection.execute(`
-            SELECT ci.id, p.name, col.name AS collection_name, p.price, ci.quantity, p.image 
+            SELECT ci.id, p.name, p.price, ci.quantity, p.image, p.id as product_id
             FROM carts c 
             JOIN cart_items ci ON c.id = ci.cart_id 
             JOIN products p ON ci.product_id = p.id 
-            LEFT JOIN collections col ON p.collection_id = col.id
             WHERE c.user_id = ?`, [userId]);
         res.json(result);
     } catch (err) {
@@ -51,6 +50,11 @@ router.post('/add', async (req, res) => {
     try {
         connection = await pool.getConnection();
         const { userId, productId, quantity } = req.body;
+
+        if (!userId || !productId || !quantity) {
+            return res.status(400).json({ error: "Thiếu thông tin: userId, productId, quantity" });
+        }
+
         await connection.beginTransaction();  // Bắt đầu transaction
 
         try {
@@ -97,7 +101,7 @@ router.put('/updateQuantity', async (req, res) => {
         await connection.beginTransaction(); // Bắt đầu transaction
         const { cartItemId, quantity } = req.body;
 
-        if (!cartItemId || quantity < 1) {
+        if (!cartItemId || !quantity || quantity < 1) {
             return res.status(400).json({ error: "Dữ liệu không hợp lệ!" });
         }
 
@@ -125,9 +129,9 @@ router.put('/updateQuantity', async (req, res) => {
             }
 
             const stock = productResult[0].stock;
-            const stockDifference = quantity - oldQuantity;
+            const stockDifference =  oldQuantity - quantity; // quantity mới - số lượng cũ
 
-            if (stockDifference > 0 && stock < stockDifference) {
+            if (quantity > oldQuantity && stock < (quantity - oldQuantity) ) {
                 return res.status(400).json({ error: "Không đủ hàng trong kho!" });
             }
 
@@ -168,6 +172,10 @@ router.post('/removeItem', async (req, res) => {
     try {
         connection = await pool.getConnection();
         const { cartItemId } = req.body;
+
+        if (!cartItemId) {
+            return res.status(400).json({ error: "Thiếu cartItemId!" });
+        }
         await connection.execute('DELETE FROM cart_items WHERE id = ?', [cartItemId]);
         res.json({ message: "Xóa sản phẩm thành công" });
     } catch (err) {
