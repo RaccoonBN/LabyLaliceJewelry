@@ -24,6 +24,7 @@ app.use(cors({
 }));
 
 app.use('/uploads', express.static(path.join(__dirname, '../../../Server/backend/public/uploads')));
+app.use('/assets', express.static(path.join(__dirname, '../frontend/src/assets')));
 
 // Cấu hình API routes
 app.use("/products", productRoutes);

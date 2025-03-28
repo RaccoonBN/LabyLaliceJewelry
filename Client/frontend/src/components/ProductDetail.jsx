@@ -72,9 +72,9 @@ const ProductDetail = ({ product }) => {
   return (
     <div className="product-detail-container">
       <div className="product-detail-image">
-        <img 
-          src={product.image ? `http://localhost:4000/uploads/${product.image}` : "/default-image.jpg"} 
-          alt={product.name} 
+        <img
+          src={product.image ? `http://localhost:4000/uploads/${product.image}` : "/default-image.jpg"}
+          alt={product.name}
           onError={(e) => (e.target.src = "/default-image.jpg")}
         />
       </div>
@@ -89,7 +89,6 @@ const ProductDetail = ({ product }) => {
         </div>
         <div className="product-detail-actions">
           <button className="product-detail-add-to-cart" onClick={handleAddToCart}>🛒 Thêm vào giỏ hàng</button>
-          <button className="product-detail-buy-now">⚡ Mua ngay</button>
         </div>
       </div>
     </div>
