@@ -1,65 +1,104 @@
-body {
-    font-family: 'Josefin Sans', sans-serif;
-  }
 .news-container {
-    max-width: 800px;
-    margin: 40px auto;
+    max-width: 700px;
+    margin: 140px auto;
     padding: 20px;
-    background: white;
-    box-shadow: none; /* Loại bỏ hiệu ứng bóng */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin-top: 120px;
-}
-
-.back-button {
-    display: inline-flex;
+  }
+  
+  .news-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .news-meta {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  
+  .news-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .news-content {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+    text-align: left;
+  }
+  
+  .news-actions {
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .like-button {
+    background: none;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Josefin Sans', sans-serif;
-
+    outline: none;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .like-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .heart-icon {
+    color: gray;
+    font-size: 28px;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+  
+  .heart-icon.liked {
+    color: red;
+    transform: scale(1.2);
+  }
+  
+  .like-count {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .back-button {
+    display: block;
+    width: 150px;
+    margin: 20px auto;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
   }
   
   .back-button:hover {
-    background: linear-gradient(90deg, #963378, #7348a3);
+    background: #0056b3;
   }
-
-.news-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin: 20px 0;
-}
-
-.news-image {
-    width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border-radius: 0; /* Loại bỏ bo góc */
-}
-
-.news-content {
-    font-size: 18px;
-    line-height: 1.6;
-    color: #333;
-    margin-top: 20px;
-    text-align: justify;
-}
-
-.news-not-found {
-    text-align: center;
-    font-size: 24px;
-    color: red;
-    margin-top: 50px;
-}
-.scroll-to-top {
+  
+  /* Nút cuộn lên đầu trang */
+  .scroll-to-top {
     position: fixed;
     bottom: 200px;
     right: 20px;
@@ -83,4 +122,10 @@ body {
     background: #b73c92;
     opacity: 1;
 }
-
+  
+  .news-not-found {
+    text-align: center;
+    font-size: 20px;
+    color: #ff4d4d;
+  }
+  

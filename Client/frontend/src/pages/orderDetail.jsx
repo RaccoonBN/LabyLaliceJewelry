@@ -1,60 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import "./orderDetail.css";
-import demosp from "../assets/demosp.png"; // Đường dẫn logo
-
-// Dữ liệu mẫu đơn hàng
-const orders = [
-  {
-    id: 1,
-    date: "2025-01-10",
-    price: 500000,
-    status: "Đã Giao Hàng",
-    items: [{ id: 101, name: "Nhẫn Kim Cương", image: demosp, quantity: 1, price: 500000 }],
-  },
-  {
-    id: 2,
-    date: "2025-01-12",
-    price: 250000,
-    status: "Đã Gửi Hàng Đi",
-    items: [{ id: 102, name: "Dây Chuyền Vàng", image: "/images/necklace.jpg", quantity: 1, price: 250000 }],
-  },
-  {
-    id: 3,
-    date: "2025-01-13",
-    price: 300000,
-    status: "Đang Giao",
-    items: [{ id: 103, name: "Bông Tai Bạc", image: "/images/earring.jpg", quantity: 2, price: 150000 }],
-  },
-  {
-    id: 4,
-    date: "2025-01-14",
-    price: 150000,
-    status: "Đã Tiếp Nhận",
-    items: [{ id: 104, name: "Nhẫn Vàng", image: "/images/gold-ring.jpg", quantity: 1, price: 150000 }],
-  },
-];
+import demosp from "../assets/demosp.png"; // Ảnh mặc định nếu sản phẩm không có ảnh
 
 const OrderDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const order = orders.find((o) => o.id === parseInt(id));
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!order) {
-    return <p className="error-message">Không tìm thấy đơn hàng!</p>;
+  // Gọi API để lấy dữ liệu đơn hàng
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const response = await fetch(`http://localhost:2000/orders/${id}`);
+        if (!response.ok) {
+          throw new Error("Không tìm thấy đơn hàng!");
+        }
+        const data = await response.json();
+        setOrder(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [id]);
+
+  // Nếu đang tải dữ liệu
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  // Nếu có lỗi
+  if (error) {
+    return <p className="error-message">{error}</p>;
   }
 
   return (
     <Container className="order-detail-container">
       {/* Nút quay lại */}
-      <Button className="back-button" variant="contained" color="secondary" onClick={() => navigate(-1)}>⬅ Quay lại</Button>
+      <Button
+        className="back-button"
+        variant="contained"
+        color="secondary"
+        onClick={() => navigate(-1)}
+      >
+        ⬅ Quay lại
+      </Button>
 
       {/* Thông tin đơn hàng */}
-      <h4 className="order-title">Chi Tiết Đơn Hàng ({order.id})</h4>
-      <p className="order-date">Ngày đặt hàng: {order.date}</p>
+      <h4 className="order-title">Chi Tiết Đơn Hàng ({order.orderId})</h4>
+      <p className="order-date">
+        Ngày đặt hàng: {new Date(order.createdAt).toLocaleDateString("vi-VN")}
+      </p>
       <p className="order-status">
-        Trạng thái: <span className={`status ${order.status.replace(/\s+/g, '-').toLowerCase()}`}>{order.status}</span>
+        Trạng thái: 
+        <span
+          className={`status ${order.status.replace(/\s+/g, "-").toLowerCase()}`}
+        >
+          {order.status}
+        </span>
       </p>
 
       {/* Bảng sản phẩm */}
@@ -73,12 +94,20 @@ const OrderDetail = () => {
             {order.items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
-                  <img src={item.image} alt={item.name} className="product-image" />
+                  <img
+                    src={item.image ? `http://localhost:4000/uploads/${item.image}` : "/default-image.jpg"}
+                    alt={item.name}
+                    className="product-image"
+                  />
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.quantity}</TableCell>
-                <TableCell>{item.price.toLocaleString()} VND</TableCell>
-                <TableCell>{(item.price * item.quantity).toLocaleString()} VND</TableCell>
+                <TableCell>
+                  {Number(item.price).toLocaleString("vi-VN")} ₫
+                </TableCell>
+                <TableCell>
+                  {Number(item.total).toLocaleString("vi-VN")} ₫
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -86,7 +115,9 @@ const OrderDetail = () => {
       </TableContainer>
 
       {/* Tổng tiền */}
-      <p className="total-price">Tổng hóa đơn: {order.price.toLocaleString()} VND</p>
+      <p className="total-price">
+        Tổng hóa đơn: {Number(order.totalAmount).toLocaleString("vi-VN")} ₫
+      </p>
     </Container>
   );
 };

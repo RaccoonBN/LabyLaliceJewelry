@@ -56,37 +56,45 @@ const Cart = () => {
       )
     );
   };
-
   const updateQuantity = (id, delta) => {
     if (!userId) return;
-
+  
+    // Cập nhật số lượng trong giỏ hàng trên UI trước khi gửi yêu cầu
     setCartItems((prevItems) =>
       prevItems.map((item) => {
         if (item.id === id) {
-          const newQuantity = Math.max(1, item.quantity + delta);
+          const newQuantity = Math.max(1, item.quantity + delta); // Đảm bảo số lượng không nhỏ hơn 1
           return { ...item, quantity: newQuantity };
         }
         return item;
       })
     );
-
+  
+    // Tìm item sau khi đã cập nhật số lượng để log giá trị chính xác
+    const updatedItem = cartItems.find((item) => item.id === id);
+    console.log("Updating quantity with params:", { userId, cartItemId: id, quantity: updatedItem ? updatedItem.quantity + delta : 0 });
+  
+    // Gửi yêu cầu PUT để cập nhật số lượng
     axios
-      .put("http://localhost:2000/cart/update", { userId, id, delta })
+      .put("http://localhost:2000/cart/updateQuantity", {
+        cartItemId: id, // Sử dụng cartItemId thay vì id
+        quantity: Math.max(1, delta), // Cập nhật số lượng, đảm bảo >= 1
+      })
       .then(() => {
-        toast.success("✅ Cập nhật số lượng thành công!", {
+        toast.success("Cập nhật số lượng thành công!", {
           position: "top-right",
           autoClose: 2000,
         });
       })
       .catch((error) => {
         console.error("Lỗi khi cập nhật số lượng:", error);
-        toast.error("❌ Lỗi khi cập nhật số lượng!", {
+        toast.error("Lỗi khi cập nhật số lượng!", {
           position: "top-right",
           autoClose: 2000,
         });
       });
   };
-
+  
   const removeItem = (id) => {
     if (!userId) return;
 

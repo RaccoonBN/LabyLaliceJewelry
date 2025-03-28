@@ -12,6 +12,7 @@ const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/order");
 const postRoutes = require("./routes/post")
+const collectionRoutes = require("./routes/collection")
 const app = express();
 const PORT = 2000;
 
@@ -32,6 +33,7 @@ app.use("/auth", authRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/post", postRoutes);
+app.use("/collections", collectionRoutes);
 
 // Khởi động server
 app.listen(PORT, () => {

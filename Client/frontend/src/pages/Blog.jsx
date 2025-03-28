@@ -42,19 +42,43 @@ const BlogPage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // Lấy danh sách bài viết từ API (hoặc dữ liệu mẫu)
-  useEffect(() => {
-    axios.get("http://localhost:2000/post/blogs")
-        .then((response) => {
-            console.log("Dữ liệu API trả về:", response.data);
-            if (!Array.isArray(response.data) || response.data.length === 0) {
-                console.error("LỖI: API không trả về danh sách bài viết hợp lệ!");
-                return;
-            }
-            setPosts(response.data);
+  // Lấy danh sách bài viết từ API
+useEffect(() => {
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get("http://localhost:2000/post/blogs");
+      console.log("Dữ liệu API trả về:", response.data);
+
+      if (!Array.isArray(response.data) || response.data.length === 0) {
+        console.error("LỖI: API không trả về danh sách bài viết hợp lệ!");
+        return;
+      }
+
+      // Kiểm tra trạng thái like của từng bài viết
+      const postsWithLikeStatus = await Promise.all(
+        response.data.map(async (post) => {
+          try {
+            const likeStatusResponse = await axios.get(
+              `http://localhost:2000/post/blogs/${post.id}/isLiked?user_id=${userId}`
+            );
+            return { ...post, isLiked: likeStatusResponse.data.isLiked };
+          } catch (error) {
+            console.error(`Lỗi khi lấy trạng thái like cho bài viết ${post.id}:`, error);
+            return { ...post, isLiked: false }; // Mặc định là chưa like nếu có lỗi
+          }
         })
-        .catch((error) => console.error("Lỗi khi tải bài viết:", error));
-}, []);
+      );
+
+      setPosts(postsWithLikeStatus);
+    } catch (error) {
+      console.error("Lỗi khi tải bài viết:", error);
+    }
+  };
+
+  if (userId) {
+    fetchPosts();
+  }
+}, [userId]); // Gọi lại effect khi userId thay đổi
 
 
 
@@ -62,8 +86,7 @@ const BlogPage = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedPosts = posts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Xử lý like bài viết
- // Xử lý like bài viết
+// Xử lý like bài viết
 const handleLike = async (blogId) => {
   console.log("👤 userId:", userId);
   console.log("📝 blogId:", blogId);

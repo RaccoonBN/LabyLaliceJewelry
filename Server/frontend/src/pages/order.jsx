@@ -1,61 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./order.css";
 import { FaInfoCircle } from "react-icons/fa";
 
+const API_BASE_URL = "http://localhost:4000/orders/all";
+
 const OrderManagement = () => {
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      name: "Nguyễn Văn A",
-      phone: "0123456789",
-      address: "123 Đường ABC, Quận 1, TP.HCM",
-      products: [
-        { name: "Dây chuyền nữ kim cương", quantity: 1, price: 35000000 },
-        { name: "Nhẫn cầu hôn", quantity: 1, price: 2500000 },
-      ],
-      payment: "Chuyển khoản",
-      status: "Đã Tiếp Nhận",
-    },
-    {
-      id: 2,
-      name: "Trần Thị B",
-      phone: "0987654321",
-      address: "456 Đường XYZ, Quận 3, TP.HCM",
-      products: [
-        { name: "Bộ trang sức Valentine ", quantity: 1, price: 32000000 },
-        { name: "Lắc tay vàng 24k", quantity: 2, price: 4500000 },
-      ],
-      payment: "Thanh toán khi nhận hàng",
-      status: "Đang Giao",
-    },
-  ]);
-
+  const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [filterStatus, setFilterStatus] = useState("");
 
-  const updateStatus = (id, newStatus) => {
-    setOrders(
-      orders.map((order) =>
-        order.id === id ? { ...order, status: newStatus } : order
-      )
-    );
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(API_BASE_URL);
+      const ordersWithProducts = response.data.map(order => ({
+        ...order,
+        products: order.products || []
+      }));
+      setOrders(ordersWithProducts);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách đơn hàng:", error);
+    }
+  };
+
+  const updateStatus = async (orderId, newStatus) => {
+    try {
+      await axios.put(`${API_BASE_URL}/${orderId}`, { status: newStatus });
+      setOrders(
+        orders.map(order =>
+          order._id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+    }
   };
 
   const calculateTotal = (products) => {
-    return products.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    return products ? products.reduce((sum, item) => sum + item.quantity * item.price, 0) : 0;
   };
-  const [filterStatus, setFilterStatus] = useState(""); // Trạng thái lọc
 
-
-  // Lọc đơn hàng theo trạng thái
   const filteredOrders = filterStatus
-    ? orders.filter((order) => order.status === filterStatus)
+    ? orders.filter(order => order.status === filterStatus)
     : orders;
 
   return (
     <div className="order-container">
       <h2 className="order-title">Quản lý Đơn Hàng</h2>
 
-      {/* Bộ lọc đơn hàng */}
       <div className="filter-container">
         <label className="filter-label">Lọc theo trạng thái:</label>
         <select
@@ -70,6 +66,7 @@ const OrderManagement = () => {
           <option value="Đã Tiếp Nhận">Đã Tiếp Nhận</option>
         </select>
       </div>
+
       <table className="order-table">
         <thead>
           <tr>
@@ -84,13 +81,13 @@ const OrderManagement = () => {
           </tr>
         </thead>
         <tbody>
-        {filteredOrders.map((order) => (
-            <tr key={order.id} className="order-row">
+          {filteredOrders.map((order) => (
+            <tr key={order._id} className="order-row">
               <td className="order-cell">{order.name}</td>
               <td className="order-cell">{order.phone}</td>
               <td className="order-cell">{order.address}</td>
               <td className="order-cell">
-                {order.products.reduce((sum, item) => sum + item.quantity, 0)}
+                {order.products ? order.products.reduce((sum, item) => sum + item.quantity, 0) : 0}
               </td>
               <td className="order-cell">{calculateTotal(order.products).toLocaleString()} đ</td>
               <td className="order-cell">{order.payment}</td>
@@ -98,7 +95,7 @@ const OrderManagement = () => {
                 <select
                   className="order-status-select"
                   value={order.status}
-                  onChange={(e) => updateStatus(order.id, e.target.value)}
+                  onChange={(e) => updateStatus(order._id, e.target.value)}
                 >
                   <option value="Đã Giao Hàng">Đã Giao Hàng</option>
                   <option value="Đã Gửi Hàng Đi">Đã Gửi Hàng Đi</option>
@@ -117,7 +114,6 @@ const OrderManagement = () => {
         </tbody>
       </table>
 
-      {/* Modal Chi Tiết Đơn Hàng */}
       {selectedOrder && (
         <div className="order-modal">
           <div className="order-modal-content">
@@ -136,15 +132,16 @@ const OrderManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {selectedOrder.products.map((product, index) => (
-                  <tr key={index}>
-                    <td>{product.name}</td>
-                    <td>{product.quantity}</td>
-                    <td>{product.price.toLocaleString()} đ</td>
-                    <td>{(product.quantity * product.price).toLocaleString()} đ</td>
-                  </tr>
-                ))}
-              </tbody>
+              {selectedOrder.products.map((product, index) => (
+                <tr key={product.id || `${product.name}-${index}`}> {/* ✅ Đảm bảo key duy nhất */}
+                  <td>{product.name}</td>
+                  <td>{product.quantity}</td>
+                  <td>{product.price.toLocaleString()} đ</td>
+                  <td>{(product.quantity * product.price).toLocaleString()} đ</td>
+                </tr>
+              ))}
+            </tbody>
+
             </table>
             <hr />
             <p><strong>Tổng tiền:</strong> {calculateTotal(selectedOrder.products).toLocaleString()} đ</p>
