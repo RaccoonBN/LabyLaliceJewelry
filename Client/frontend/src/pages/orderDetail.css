@@ -1,155 +1,159 @@
 /* Thiết lập font cho toàn bộ trang */
 body {
-    font-family: 'Josefin Sans', sans-serif;
-  }
+  font-family: 'Josefin Sans', sans-serif;
+}
+
 /* Container chính */
 .order-detail-container {
-    max-width: 900px;
-    margin: 50px auto;
-    margin-top: 130px;
-    padding: 30px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Nút quay lại */
-  .back-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .back-button:hover {
-    background: linear-gradient(90deg, #963378, #7348a3);
-  }
-  
-  /* Trạng thái đơn hàng */
-  .status {
-    display: inline-block;
-    font-weight: bold;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 15px;
-    text-transform: uppercase;
-    margin-bottom: 15px;
-  }
-  
-  /* Màu sắc theo trạng thái */
-  .status.đã-giao-hàng {
-    background: #e8f5e9;
-    color: #388e3c;
-  }
-  
-  .status.đang-giao {
-    background: #fff3e0;
-    color: #f57c00;
-  }
-  
-  .status.đã-gửi-hàng-đi {
-    background: #e3f2fd;
-    color: #1976d2;
-  }
-  
-  .status.đã-tiếp-nhận {
-    background: #eeeeee;
-    color: #616161;
-  }
-  
-  /* Bảng sản phẩm */
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px; /* Tạo khoảng cách giữa các hàng */
-    margin-top: 20px;
-  }
-  
-  th, td {
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-  }
-  
-  th {
-    background: #f5f5f5;
-    font-weight: bold;
-    font-size: 16px;
-  }
-  
-  /* Hình ảnh sản phẩm */
-  .product-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 12px;
-    transition: transform 0.3s ease;
-  }
-  
-  .product-image:hover {
-    transform: scale(1.1);
-  }
-  
-  /* Tăng khoảng cách giữa các hàng sản phẩm */
-  tr {
-    line-height: 1.6;
-  }
-  
-  /* Tổng hóa đơn */
-  .total-price {
-    text-align: right;
-    margin-top: 30px;
-    font-size: 22px;
-    font-weight: bold;
-    color: #DE4BB1;
-    border-top: 2px solid #ffccbc;
-    padding-top: 15px;
-  }
-  
-  /* Responsive (Mobile) */
-  @media (max-width: 768px) {
-    .order-detail-container {
-      padding: 20px;
-    }
-  
-    .back-button {
-      width: 100%;
-      text-align: center;
-    }
-  
-    th, td {
-      padding: 12px;
-      font-size: 14px;
-    }
-  
-    .product-image {
-      width: 80px;
-      height: 80px;
-    }
-  
-    .total-price {
-      font-size: 20px;
-    }
-  }
-  /* Tiêu đề đơn hàng */
+  max-width: 900px;
+  width: 100%;
+  margin: 120px 0px 0px 70px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  text-align: center; /* Căn giữa nội dung */
+  margin-bottom: 100px;
+}
+
+/* Nút quay lại */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.back-button:hover {
+  background: linear-gradient(90deg, #963378, #7348a3);
+}
+
+/* Tiêu đề đơn hàng */
 .order-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
 }
 
 /* Ngày đặt hàng */
 .order-date {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 5px;
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Trạng thái đơn hàng */
+.status, .payment-status {
+  display: inline-block;
+  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 10px 0;
+}
+
+/* Màu sắc theo trạng thái */
+.status.đã-giao-hàng, .payment-status.đã-thanh-toán {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.status.đang-giao {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.status.đã-gửi-hàng-đi {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status.đã-tiếp-nhận, .payment-status.chưa-thanh-toán {
+  background: #eeeeee;
+  color: #616161;
+}
+
+/* Bảng sản phẩm */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background: #f5f5f5;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Hình ảnh sản phẩm */
+.product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.1);
+}
+
+/* Tăng khoảng cách giữa các hàng sản phẩm */
+tr {
+  line-height: 1.6;
+}
+
+/* Tổng hóa đơn */
+.total-price {
+  text-align: right;
+  margin-top: 30px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #DE4BB1;
+  border-top: 2px solid #ffccbc;
+  padding-top: 15px;
+}
+
+/* Responsive (Mobile) */
+@media (max-width: 768px) {
+  .order-detail-container {
+      padding: 20px;
+  }
+
+  .back-button {
+      width: 100%;
+      text-align: center;
+  }
+
+  th, td {
+      padding: 12px;
+      font-size: 14px;
+  }
+
+  .product-image {
+      width: 80px;
+      height: 80px;
+  }
+
+  .total-price {
+      font-size: 20px;
+  }
 }

@@ -21,7 +21,6 @@ const OrderDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Gọi API để lấy dữ liệu đơn hàng
   useEffect(() => {
     const fetchOrder = async () => {
       try {
@@ -41,19 +40,16 @@ const OrderDetail = () => {
     fetchOrder();
   }, [id]);
 
-  // Nếu đang tải dữ liệu
   if (loading) {
     return <CircularProgress />;
   }
 
-  // Nếu có lỗi
   if (error) {
     return <p className="error-message">{error}</p>;
   }
 
   return (
     <Container className="order-detail-container">
-      {/* Nút quay lại */}
       <Button
         className="back-button"
         variant="contained"
@@ -63,30 +59,46 @@ const OrderDetail = () => {
         ⬅ Quay lại
       </Button>
 
-      {/* Thông tin đơn hàng */}
       <h4 className="order-title">Chi Tiết Đơn Hàng ({order.orderId})</h4>
       <p className="order-date">
         Ngày đặt hàng: {new Date(order.createdAt).toLocaleDateString("vi-VN")}
       </p>
       <p className="order-status">
-        Trạng thái: 
+        Trạng thái đơn hàng:
         <span
           className={`status ${order.status.replace(/\s+/g, "-").toLowerCase()}`}
         >
           {order.status}
         </span>
       </p>
+      <p className="payment-status">
+        Trạng thái thanh toán: 
+        <span
+          className={`payment-status ${order.paymentStatus?.replace(/\s+/g, "-").toLowerCase()}`}
+        >
+          {order.paymentStatus || "Chưa thanh toán"}
+        </span>
+      </p>
 
-      {/* Bảng sản phẩm */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><strong>Hình Ảnh</strong></TableCell>
-              <TableCell><strong>Sản Phẩm</strong></TableCell>
-              <TableCell><strong>Số Lượng</strong></TableCell>
-              <TableCell><strong>Giá</strong></TableCell>
-              <TableCell><strong>Tổng</strong></TableCell>
+              <TableCell>
+                <strong>Hình Ảnh</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Sản Phẩm</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Số Lượng</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Giá</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Tổng</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -94,7 +106,11 @@ const OrderDetail = () => {
               <TableRow key={item.id}>
                 <TableCell>
                   <img
-                    src={item.image ? `http://localhost:4000/uploads/${item.image}` : "/default-image.jpg"}
+                    src={
+                      item.image
+                        ? `http://localhost:4000/uploads/${item.image}`
+                        : "/default-image.jpg"
+                    }
                     alt={item.name}
                     className="product-image"
                   />
@@ -113,7 +129,6 @@ const OrderDetail = () => {
         </Table>
       </TableContainer>
 
-      {/* Tổng tiền */}
       <p className="total-price">
         Tổng hóa đơn: {Number(order.totalAmount).toLocaleString("vi-VN")} ₫
       </p>

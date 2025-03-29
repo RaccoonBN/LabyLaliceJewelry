@@ -136,7 +136,7 @@ router.get("/top-rated", async (req, res) => {
           LEFT JOIN reviews r ON p.id = r.product_id
           GROUP BY p.id
           ORDER BY avg_rating DESC
-          LIMIT 10; -- Giới hạn số lượng sản phẩm trả về
+          LIMIT 3; -- Giới hạn số lượng sản phẩm trả về
       `;
 
       const [results] = await connection.execute(topRatedQuery);

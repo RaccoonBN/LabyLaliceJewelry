@@ -101,13 +101,28 @@ router.put("/:orderId/status", async (req, res) => {
         const { orderId } = req.params;
         const { status } = req.body;
 
-        const [result] = await connection.execute(
+        // Kiểm tra xem đơn hàng có tồn tại không
+        const [orderCheck] = await connection.execute(
+            "SELECT * FROM orders WHERE id = ?",
+            [orderId]
+        );
+
+        if (orderCheck.length === 0) {
+            return res.status(404).json({ error: "Đơn hàng không tồn tại" });
+        }
+
+        // Cập nhật trạng thái đơn hàng
+        await connection.execute(
             "UPDATE orders SET status = ? WHERE id = ?",
             [status, orderId]
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: "Đơn hàng không tồn tại" });
+        // Nếu trạng thái là "đã giao hàng", cập nhật trạng thái thanh toán thành "đã thanh toán"
+        if (status === "Đã Giao Hàng") {
+            await connection.execute(
+                "UPDATE orders SET payment_status = ? WHERE id = ?",
+                ["Đã Thanh Toán", orderId]
+            );
         }
 
         res.json({ message: "Cập nhật trạng thái đơn hàng thành công" });
@@ -118,5 +133,6 @@ router.put("/:orderId/status", async (req, res) => {
         if (connection) connection.release();
     }
 });
+
 
 module.exports = router;

@@ -58,7 +58,9 @@ const Order = () => {
 
         if (paymentStatus === 'success') {
             alert('Thanh toán thành công!');
-            clearCartAndNavigate();
+            // CALL API CREATE ORDER HERE
+            createOrder();
+
         } else if (paymentStatus === 'failed') {
             alert(`Thanh toán thất bại. Mã lỗi: ${errorCode}`);
         }
@@ -74,8 +76,101 @@ const Order = () => {
     const totalAmount = selectedItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
     const handleOrderSubmit = async (e) => {
-        e.preventDefault();
+      e.preventDefault();
+  
+      if (!userId) {
+          console.error("Không có userId, không thể tạo đơn hàng");
+          alert("Vui lòng đăng nhập để tiếp tục!");
+          return;
+      }
+  
+      if (!orderDetails.name || !orderDetails.address || !orderDetails.phone || !orderDetails.email) {
+          alert("Vui lòng điền đầy đủ thông tin!");
+          return;
+      }
+  
+      if (selectedItems.length === 0) {
+          alert("Vui lòng chọn ít nhất một sản phẩm để đặt hàng!");
+          return;
+      }
+  
+      for (const item of selectedItems) {
+          if (!item.product_id || typeof item.product_id !== 'number') {
+              console.error("Sản phẩm không có product_id:", item);
+              alert("Có lỗi xảy ra. Vui lòng kiểm tra lại giỏ hàng!");
+              return;
+          }
+      }
+  
+      const orderData = {
+          userId,
+          items: selectedItems.map(({ product_id, name, quantity, price }) => ({ id: parseInt(product_id, 10), name, quantity, price })),
+          totalAmount,
+          ...orderDetails,
+      };
+      console.log("Dữ liệu gửi lên API:", orderData);
+  
+      if (orderDetails.paymentMethod === 'cod') {
+          // Xử lý thanh toán COD
+          try {
+              const response = await axios.post("http://localhost:2000/orders", orderData);
+              console.log("Đơn hàng được tạo thành công:", response.data);
+              clearCartAndNavigate();
+          } catch (error) {
+              handleOrderError(error);
+          }
+      } else if (orderDetails.paymentMethod === 'momo') {
+          // Xử lý thanh toán MoMo (tương lai)
+          alert('Chức năng thanh toán MoMo chưa được hỗ trợ!');
+      }
+      else if (orderDetails.paymentMethod === 'vnpay') {
+          // Xử lý thanh toán VNPay
+          try {
+              // **1. Tạo đơn hàng trước khi chuyển hướng sang VNPay**
+              const response = await axios.post("http://localhost:2000/orders", {
+                  ...orderData,
+                  paymentMethod: 'vnpay',  // Đặt phương thức thanh toán là VNPay
+                  paymentStatus: 'Chờ thanh toán' //Đặt trạng thái thanh toán
+              });
+  
+              const newOrderId = response.data.id; // Lấy ID đơn hàng vừa tạo
+  
+              // **2. Gọi API tạo URL thanh toán VNPay, truyền orderId**
+              const paymentResponse = await axios.post(
+                  "http://localhost:2000/vnpay/create_payment_url",
+                  {
+                      amount: totalAmount,
+                      bankCode: '',
+                      language: 'vn',
+                      orderId: newOrderId  // Truyền orderId cho backend
+                  }
+              );
+  
+              if (paymentResponse.data && paymentResponse.data.paymentUrl) {
+                  window.location.href = paymentResponse.data.paymentUrl;
+              } else {
+                  throw new Error("Không nhận được paymentUrl từ backend");
+              }
+          } catch (error) {
+              handleOrderError(error);
+          }
+      }
+  };
 
+    const clearCartAndNavigate = () => {
+        // Xóa các sản phẩm đã thanh toán từ localStorage
+        const updatedCheckoutItems = JSON.parse(localStorage.getItem("checkoutItems") || "[]").filter(item => !item.checked);
+        localStorage.setItem("checkoutItems", JSON.stringify(updatedCheckoutItems));
+        setSelectedItems([]);
+        navigate("/order-success"); // Chuyển hướng đến trang thành công
+    };
+
+    const handleOrderError = (error) => {
+        console.error("Lỗi khi tạo đơn hàng:", error.response ? error.response.data : error.message);
+        alert("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!");
+    };
+
+    const createOrder = async () => {
         if (!userId) {
             console.error("Không có userId, không thể tạo đơn hàng");
             alert("Vui lòng đăng nhập để tiếp tục!");
@@ -105,57 +200,18 @@ const Order = () => {
             items: selectedItems.map(({ product_id, name, quantity, price }) => ({ id: parseInt(product_id, 10), name, quantity, price })),
             totalAmount,
             ...orderDetails,
+            paymentMethod: 'vnpay'  // Set payment method to VNPay since payment is successful
         };
         console.log("Dữ liệu gửi lên API:", orderData);
 
-        if (orderDetails.paymentMethod === 'cod') {
-            // Xử lý thanh toán COD
-            try {
-                const response = await axios.post("http://localhost:2000/orders", orderData);
-                console.log("Đơn hàng được tạo thành công:", response.data);
-                clearCartAndNavigate();
-            } catch (error) {
-                handleOrderError(error);
-            }
-        } else if (orderDetails.paymentMethod === 'momo') {
-            // Xử lý thanh toán MoMo (tương lai)
-            alert('Chức năng thanh toán MoMo chưa được hỗ trợ!');
+        try {
+            const response = await axios.post("http://localhost:2000/orders", orderData);
+            console.log("Đơn hàng được tạo thành công:", response.data);
+            clearCartAndNavigate();
+        } catch (error) {
+            handleOrderError(error);
         }
-        else if (orderDetails.paymentMethod === 'vnpay') {
-            // Xử lý thanh toán VNPay
-            try {
-                const paymentResponse = await axios.post(
-                    "http://localhost:2000/vnpay/create_payment_url",  // API tạo URL thanh toán VNPay
-                    {
-                        amount: totalAmount,
-                        bankCode: '', 
-                        language: 'vn' 
-                    }
-                );
-
-                if (paymentResponse.data && paymentResponse.data.paymentUrl) {
-                    window.location.href = paymentResponse.data.paymentUrl;
-                } else {
-                    throw new Error("Không nhận được paymentUrl từ backend");
-                }
-            } catch (error) {
-                handleOrderError(error);
-            }
-        }
-    };
-
-    const clearCartAndNavigate = () => {
-        // Xóa các sản phẩm đã thanh toán từ localStorage
-        const updatedCheckoutItems = JSON.parse(localStorage.getItem("checkoutItems") || "[]").filter(item => !item.checked);
-        localStorage.setItem("checkoutItems", JSON.stringify(updatedCheckoutItems));
-        setSelectedItems([]);
-        navigate("/order-success");
-    };
-
-    const handleOrderError = (error) => {
-        console.error("Lỗi khi tạo đơn hàng:", error.response ? error.response.data : error.message);
-        alert("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!");
-    };
+    }
 
     if (loading) {
         return <div>Loading...</div>;
