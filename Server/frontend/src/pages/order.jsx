@@ -74,57 +74,58 @@ const OrderManagement = () => {
       </div>
 
       <table className="order-table">
-        <thead>
-          <tr>
-            <th className="order-header">Tên khách hàng</th>
-            <th className="order-header">Số điện thoại</th>
-            <th className="order-header">Địa chỉ</th>
-            <th className="order-header">Số lượng sản phẩm</th>
-            <th className="order-header">Tổng tiền</th>
-            <th className="order-header">Thanh toán</th>
-            {/* Thêm cột Thời gian đặt hàng */}
-            <th className="order-header">Thời gian đặt hàng</th>
-            <th className="order-header">Trạng thái</th>
-            <th className="order-header">Chi tiết</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredOrders.map((order) => (
-            <tr key={order.order_id} className="order-row">
-              <td className="order-cell">{order.customer_name}</td>
-              <td className="order-cell">{order.customer_phone}</td>
-              <td className="order-cell">{order.customer_address}</td>
-              <td className="order-cell">
-                {order.products ? order.products.reduce((sum, item) => sum + item.quantity, 0) : 0}
-              </td>
-              <td className="order-cell">{calculateTotal(order.products).toLocaleString()} đ</td>
-              <td className="order-cell">{order.payment_method}</td>
-              {/* Hiển thị thời gian đặt hàng */}
-              <td className="order-cell">
-                {order.created_at ? moment(order.created_at).format('DD/MM/YYYY HH:mm') : 'N/A'}
-              </td>
-              <td className="order-cell">
-                <select
-                  className="order-status-select"
-                  value={order.status}
-                  onChange={(e) => updateStatus(order.order_id, e.target.value)}
-                >
-                  <option value="Đã Giao Hàng">Đã Giao Hàng</option>
-                  <option value="Đã Gửi Hàng Đi">Đã Gửi Hàng Đi</option>
-                  <option value="Đang Giao">Đang Giao</option>
-                  <option value="Đã Tiếp Nhận">Đã Tiếp Nhận</option>
-                </select>
-              </td>
-              <td className="order-cell">
-                <FaInfoCircle
-                  className="order-info-icon"
-                  onClick={() => setSelectedOrder(order)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  <thead>
+    <tr>
+      <th className="order-header">Mã đơn hàng</th> {/* ✅ Thêm cột Mã đơn hàng */}
+      <th className="order-header">Tên khách hàng</th>
+      <th className="order-header">Số điện thoại</th>
+      <th className="order-header">Địa chỉ</th>
+      <th className="order-header">Số lượng sản phẩm</th>
+      <th className="order-header">Tổng tiền</th>
+      <th className="order-header">Thanh toán</th>
+      <th className="order-header">Thời gian đặt hàng</th>
+      <th className="order-header">Trạng thái</th>
+      <th className="order-header">Chi tiết</th>
+    </tr>
+  </thead>
+  <tbody>
+    {filteredOrders.map((order) => (
+      <tr key={order.order_id} className="order-row">
+        <td className="order-cell">{order.order_id}</td> {/* ✅ Hiển thị Mã đơn hàng */}
+        <td className="order-cell">{order.customer_name}</td>
+        <td className="order-cell">{order.customer_phone}</td>
+        <td className="order-cell">{order.customer_address}</td>
+        <td className="order-cell">
+          {order.products ? order.products.reduce((sum, item) => sum + item.quantity, 0) : 0}
+        </td>
+        <td className="order-cell">{calculateTotal(order.products).toLocaleString()} đ</td>
+        <td className="order-cell">{order.payment_method}</td>
+        <td className="order-cell">
+          {order.created_at ? moment(order.created_at).format('DD/MM/YYYY HH:mm') : 'N/A'}
+        </td>
+        <td className="order-cell">
+          <select
+            className="order-status-select"
+            value={order.status}
+            onChange={(e) => updateStatus(order.order_id, e.target.value)}
+          >
+            <option value="Đã Giao Hàng">Đã Giao Hàng</option>
+            <option value="Đã Gửi Hàng Đi">Đã Gửi Hàng Đi</option>
+            <option value="Đang Giao">Đang Giao</option>
+            <option value="Đã Tiếp Nhận">Đã Tiếp Nhận</option>
+          </select>
+        </td>
+        <td className="order-cell">
+          <FaInfoCircle
+            className="order-info-icon"
+            onClick={() => setSelectedOrder(order)}
+          />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
 
       {selectedOrder && (
         <div className="order-modal">

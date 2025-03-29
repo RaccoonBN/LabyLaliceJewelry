@@ -16,6 +16,7 @@ const collectionRoutes = require("./routes/collection")
 const app = express();
 const PORT = 2000;
 const notificationsRoutes = require("./routes/notifications"); // Import routes
+const vnpayRoutes = require('./routes/vnpay');
 
 // Middleware xử lý JSON & CORS
 app.use(bodyParser.json());
@@ -37,6 +38,7 @@ app.use("/orders", orderRoutes);
 app.use("/post", postRoutes);
 app.use("/collections", collectionRoutes);
 app.use("/notifications", notificationsRoutes); // Mount routes
+app.use('/vnpay', vnpayRoutes);
 
 // Khởi động server
 app.listen(PORT, () => {
