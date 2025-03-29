@@ -1,0 +1,61 @@
+version: "3.1"
+
+nlu:
+  - intent: greet
+    examples: |
+      - chào bạn
+      - xin chào
+      - hello
+      - hi
+      - hey
+      - xin chào chatbot
+      - có ai ở đó không?
+      - bạn có khỏe không?
+      - hi
+
+  - intent: goodbye
+    examples: |
+      - tạm biệt
+      - bye
+      - good bye
+      - see you
+      - hẹn gặp lại
+      - tạm biệt nhé
+      - chào tạm biệt
+
+  - intent: order_status
+    examples: |
+      - đơn hàng [44](order_id) của tôi thế nào rồi
+      - tình trạng đơn hàng [123](order_id)
+      - cho tôi biết đơn hàng số [99](order_id)
+      - đơn [555](order_id) của tôi đến đâu rồi
+      - đơn hàng [ABC](order_id) của tôi khi nào giao
+      - trạng thái đơn hàng [12345](order_id)
+      - kiểm tra đơn hàng [67890](order_id)
+      - đơn hàng 44 của tôi như nào
+      - đơn hàng 123 của tôi đâu rồi
+
+  - intent: suggest_product
+    examples: |
+      - gợi ý [nhẫn](category_name) cho tôi
+      - giới thiệu [dây chuyền](category_name) đi
+      - tôi muốn xem [bông tai](category_name)
+      - cho tôi xem [lắc tay](category_name)
+      - có [vòng cổ](category_name) nào mới không
+      - gợi ý [nhẫn cưới](category_name)
+      - [khuyên tai](category_name) đẹp
+      - cho tôi xem [nhan](category_name)
+
+  - intent: top_rated_products
+    examples: |
+      - sản phẩm nào được đánh giá cao
+      - gợi ý sản phẩm tốt nhất
+      - cho tôi xem sản phẩm hot
+      - những sản phẩm được yêu thích
+      - sản phẩm nào đang được mua nhiều nhất
+      - sản phẩm nào bán chạy nhất
+      - gợi ý sản phẩm được yêu thích
+      - cho tôi xem sản phẩm tốt nhất
+      - đánh giá cao sản phẩm nào
+      - sản phẩm nào đang thịnh hành
+      - sản phẩm hot

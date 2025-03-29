@@ -1,0 +1,57 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - order_status
+  - suggest_product
+  - top_rated_products
+
+entities:
+  - order_id
+  - category_name
+
+slots:
+  order_id:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: order_id
+  category_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: category_name
+
+responses:
+  utter_greet:
+    - text: "Xin chào! Tôi có thể giúp gì cho bạn?"
+
+  utter_goodbye:
+    - text: "Tạm biệt!"
+
+  utter_ask_order_id:
+    - text: "Vui lòng cho biết mã đơn hàng của bạn."
+
+  utter_no_order_id:
+    - text: "Bạn vui lòng cung cấp mã đơn hàng để tôi kiểm tra."
+
+  utter_ask_category:
+    - text: "Bạn muốn xem sản phẩm thuộc danh mục nào?"
+
+  utter_suggest_product_message:
+    - text: "Đây là một vài sản phẩm {category_name} mà bạn có thể thích:"
+
+  utter_top_rated_products_message:
+    - text: "Đây là một vài sản phẩm được đánh giá cao:"
+
+  utter_default:
+    - text: "Tôi không hiểu ý của bạn. Vui lòng thử lại."
+
+actions:
+  - action_check_order_status
+  - action_suggest_products
+  - action_top_rated_products
+  - action_default_fallback # Thêm action default fallback

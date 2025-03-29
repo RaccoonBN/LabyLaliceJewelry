@@ -1,0 +1,27 @@
+version: "3.1"
+
+stories:
+  - story: Kiểm tra trạng thái đơn hàng
+    steps:
+      - intent: order_status
+      - action: action_check_order_status
+
+  - story: Gợi ý sản phẩm theo danh mục
+    steps:
+      - intent: suggest_product
+      - action: action_suggest_products
+
+  - story: Xem sản phẩm được đánh giá cao
+    steps:
+      - intent: top_rated_products
+      - action: action_top_rated_products
+
+  - story: Chào hỏi
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  - story: Tạm biệt
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye

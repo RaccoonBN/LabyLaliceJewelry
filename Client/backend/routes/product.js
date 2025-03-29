@@ -118,38 +118,46 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// **LOẠI BỎ API NÀY**
-// // 🔍 API: Tìm kiếm sản phẩm theo tên, danh mục hoặc bộ sưu tập
-// router.get("/search", async (req, res) => {
-//   let connection;
-//   try {
-//     connection = await pool.getConnection(); // Lấy kết nối từ pool
-//     const { query } = req.query;
-//     if (!query) {
-//       return res.json([]);
-//     }
+// 🌟 API: Lấy danh sách sản phẩm được đánh giá cao nhất
+router.get("/top-rated", async (req, res) => {
+  let connection;
+  try {
+      connection = await pool.getConnection();
 
-//     const searchQuery = `
-//       SELECT p.id, p.name, p.image, p.price, c.name AS category_name, col.name AS collection_name
-//       FROM products p
-//       LEFT JOIN categories c ON p.category_id = c.id
-//       LEFT JOIN collections col ON p.collection_id = col.id
-//       WHERE p.name LIKE ? 
-//          OR c.name LIKE ? 
-//          OR col.name LIKE ? 
-//     `;
+      // Truy vấn sản phẩm và tính trung bình rating, sắp xếp giảm dần theo rating
+      const topRatedQuery = `
+          SELECT p.id, p.name, p.description, p.price, p.stock, p.image, 
+                 p.category_id, c.name AS category_name, 
+                 p.collection_id, col.name AS collection_name,
+                 AVG(r.rating) AS avg_rating
+          FROM products p
+          LEFT JOIN categories c ON p.category_id = c.id
+          LEFT JOIN collections col ON p.collection_id = col.id
+          LEFT JOIN reviews r ON p.id = r.product_id
+          GROUP BY p.id
+          ORDER BY avg_rating DESC
+          LIMIT 10; -- Giới hạn số lượng sản phẩm trả về
+      `;
 
-//     const [results] = await connection.execute(searchQuery, [`%${query}%`, `%${query}%`, `%${query}%`]);
+      const [results] = await connection.execute(topRatedQuery);
 
-//     res.json(results);
-//   } catch (err) {
-//     console.error("Lỗi khi tìm kiếm sản phẩm:", err);
-//     return res.status(500).json({ error: "Lỗi khi tìm kiếm sản phẩm" });
-//   } finally {
-//     if (connection) {
-//       connection.release(); // Trả kết nối về pool
-//     }
-//   }
-// });
+      // Xử lý ảnh mặc định nếu không có ảnh
+      const formattedResults = results.map(product => {
+          product.image = product.image
+              ? `http://localhost:4000/uploads/${product.image}`
+              : "/default-image.jpg";
+          return product;
+      });
+
+      res.json(formattedResults);
+  } catch (err) {
+      console.error("Lỗi khi lấy sản phẩm đánh giá cao:", err);
+      return res.status(500).json({ error: "Lỗi khi lấy sản phẩm đánh giá cao" });
+  } finally {
+      if (connection) {
+          connection.release(); // Trả kết nối về pool
+      }
+  }
+});
 
 module.exports = router;

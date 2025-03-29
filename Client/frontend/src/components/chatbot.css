@@ -5,7 +5,7 @@
     right: 20px;
     z-index: 1000;
 }
-  
+
 /* Nút mở chatbot */
 .chatbot-button {
     width: 60px;
@@ -20,12 +20,12 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease-in-out, background-color 0.3s;
 }
-  
+
 .chatbot-button:hover {
     background-color: #8a2e67;
     transform: scale(1.1);
 }
-  
+
 /* Kích thước logo, làm tròn đẹp hơn */
 .chatbot-logo {
     width: 42px;
@@ -33,7 +33,7 @@
     object-fit: cover;
     border-radius: 50%;
 }
-  
+
 /* Khung chat */
 .chatbot-box {
     width: 320px;
@@ -46,7 +46,7 @@
     border: 1px solid #ccc;
     overflow: hidden;
 }
-  
+
 /* Header chatbot */
 .chatbot-header {
     background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
@@ -56,12 +56,12 @@
     justify-content: space-between;
     align-items: center;
 }
-  
+
 .chatbot-title {
     font-size: 18px;
     font-weight: bold;
 }
-  
+
 .chatbot-close {
     background: none;
     border: none;
@@ -69,7 +69,7 @@
     font-size: 20px;
     cursor: pointer;
 }
-  
+
 /* Nội dung chat */
 .chatbot-messages {
     height: 250px;
@@ -78,34 +78,38 @@
     display: flex;
     flex-direction: column;
 }
-  
+
 /* Tin nhắn */
 .chatbot-message {
     max-width: 75%;
     padding: 8px;
     margin-bottom: 8px;
     border-radius: 8px;
-    font-size: 18px;
+    font-size: 14px; /* Thay đổi kích thước chữ cho đồng nhất */
 }
-  
+
+.chatbot-message {
+    font-size: 14px; /* Thay đổi kích thước chữ cho đồng nhất */
+}
+
 .chatbot-message.user {
     align-self: flex-end;
     background: #DE4BB1;
     color: white;
 }
-  
+
 .chatbot-message.bot {
     align-self: flex-start;
     background: #f1f1f1;
 }
-  
+
 /* Ô nhập tin nhắn */
 .chatbot-input {
     display: flex;
     border-top: 1px solid #ddd;
     padding: 8px;
 }
-  
+
 .chatbot-textbox {
     flex: 1;
     padding: 8px;
@@ -113,7 +117,7 @@
     border-radius: 5px 0 0 5px;
     font-size: 14px;
 }
-  
+
 .chatbot-send {
     background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
     color: white;
@@ -122,7 +126,62 @@
     border-radius: 0 5px 5px 0;
     cursor: pointer;
 }
-  
+
 .chatbot-send:hover {
     background: #8a2e67;
+}
+
+/* CSS cho danh sách sản phẩm */
+.product-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* CSS cho mỗi thẻ sản phẩm */
+.product-item-card {
+    width: 140px; /* Giảm chiều rộng để vừa vặn hơn */
+    margin: 5px;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-item-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.product-item-title {
+    font-size: 14px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-item-price {
+    font-size: 12px;
+    color: #777;
+    margin: 3px 0;
+}
+
+/* Nút bấm */
+.product-item-button {
+    background-color: #DE4BB1; /* Màu nút tương tự chatbot */
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.product-item-button:hover {
+    background-color: #8a2e67; /* Màu hover tương tự chatbot */
 }
