@@ -15,7 +15,36 @@
     text-align: center;
     font-size: 28px;
   }
-  
+  .export-pdf-button,
+.export-excel-button {
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 8px;
+}
+
+.export-pdf-button {
+    background-color: #e74c3c; /* Màu đỏ */
+    color: white;
+}
+
+.export-pdf-button:hover {
+    background-color: #c0392b; /* Màu đỏ đậm */
+}
+
+.export-excel-button {
+    background-color: #2ecc71; /* Màu xanh lá */
+    color: white;
+}
+
+.export-excel-button:hover {
+    background-color: #27ae60; /* Màu xanh lá đậm */
+}
+
   /* Bảng đơn hàng */
   .order-table {
     width: 100%;
