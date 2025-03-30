@@ -56,51 +56,45 @@ router.get("/", async (req, res) => {
   }
 });
 
+// 🌟 API: Lấy danh sách sản phẩm được đánh giá cao nhất
 router.get("/top-rated", async (req, res) => {
   let connection;
   try {
-    connection = await pool.getConnection();
+      connection = await pool.getConnection();
 
-    const topRatedQuery = `
-      SELECT p.id, p.name, p.description, p.price, p.stock, p.image, 
-      p.category_id, c.name AS category_name, 
-      p.collection_id, col.name AS collection_name,
-      AVG(r.rating) AS avg_rating
-      FROM products p
-      INNER JOIN reviews r ON p.id = r.product_id
-      LEFT JOIN categories c ON p.category_id = c.id
-      LEFT JOIN collections col ON p.collection_id = col.id
-      GROUP BY p.id
-      ORDER BY avg_rating DESC
-      LIMIT 3;
-    `;
+      // Truy vấn sản phẩm và tính trung bình rating, sắp xếp giảm dần theo rating
+      const topRatedQuery = `
+          SELECT p.id, p.name, p.description, p.price, p.stock, p.image, 
+                 p.category_id, c.name AS category_name, 
+                 p.collection_id, col.name AS collection_name,
+                 AVG(r.rating) AS avg_rating
+          FROM products p
+          LEFT JOIN categories c ON p.category_id = c.id
+          LEFT JOIN collections col ON p.collection_id = col.id
+          LEFT JOIN reviews r ON p.id = r.product_id
+          GROUP BY p.id
+          ORDER BY avg_rating DESC
+          LIMIT 3; -- Giới hạn số lượng sản phẩm trả về
+      `;
 
-    console.log("Truy vấn SQL:", topRatedQuery); // Log truy vấn
+      const [results] = await connection.execute(topRatedQuery);
 
-    const [results] = await connection.execute(topRatedQuery);
-
-    console.log("Kết quả truy vấn:", results); // Log kết quả
-
-    if (results && Array.isArray(results)) {
+      // Xử lý ảnh mặc định nếu không có ảnh
       const formattedResults = results.map(product => {
-        product.image = (typeof product.image === 'string' && product.image)
-          ? `http://localhost:4000/uploads/${product.image}`
-          : "/default-image.jpg";
-        return product;
+          product.image = product.image
+              ? `http://localhost:4000/uploads/${product.image}`
+              : "/default-image.jpg";
+          return product;
       });
+
       res.json(formattedResults);
-    } else {
-      console.warn("Không có kết quả hoặc kết quả không phải là mảng:", results);
-      return res.status(200).json([]); // Trả về mảng rỗng
-    }
   } catch (err) {
-    console.error("Lỗi khi lấy sản phẩm đánh giá cao:", err);
-    console.log(err); // In đầy đủ thông tin lỗi
-    return res.status(500).json({ error: "Lỗi khi lấy sản phẩm đánh giá cao", message: err.message }); // Trả về thông báo lỗi chi tiết
+      console.error("Lỗi khi lấy sản phẩm đánh giá cao:", err);
+      return res.status(500).json({ error: "Lỗi khi lấy sản phẩm đánh giá cao" });
   } finally {
-    if (connection) {
-      connection.release();
-    }
+      if (connection) {
+          connection.release(); // Trả kết nối về pool
+      }
   }
 });
 // 🛍 API: Lấy chi tiết sản phẩm theo ID (kèm đánh giá & sản phẩm liên quan)

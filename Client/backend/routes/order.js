@@ -61,11 +61,14 @@ const sendConfirmationEmail = async (orderId, email) => {
         `;
 
         const [items] = await connection.execute(orderItemsQuery, [orderId]);
+        console.log("Order Items:", items); // <---- Thêm dòng này
 
         // Tạo nội dung email từ template
         const emailBody = compiledEmailTemplate({
             items: items.map((item) => ({
-                ...item,
+                name: item.product_name, // Sử dụng product_name ở đây
+                quantity: item.quantity,
+                price: item.price, // Sử dụng price ở đây
                 total: item.quantity * item.price,
             })),
             totalAmount: order.total,
