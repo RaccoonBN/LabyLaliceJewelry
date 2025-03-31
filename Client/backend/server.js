@@ -11,20 +11,24 @@ const categoryRoutes = require("./routes/categories");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/order");
-const postRoutes = require("./routes/post")
-const collectionRoutes = require("./routes/collection")
+const postRoutes = require("./routes/post");
+const collectionRoutes = require("./routes/collection");
+const notificationsRoutes = require("./routes/notifications");
+const vnpayRoutes = require('./routes/vnpay');
+
 const app = express();
 const PORT = 2000;
-const notificationsRoutes = require("./routes/notifications"); // Import routes
-const vnpayRoutes = require('./routes/vnpay');
 
 // Middleware xử lý JSON & CORS
 app.use(bodyParser.json());
 app.use(cors({
-    origin: "http://localhost:3000", // Cho phép frontend truy cập API
+    origin: '*', // 🌍 Cho phép tất cả nguồn truy cập
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Hỗ trợ các method
+    allowedHeaders: ['Content-Type', 'Authorization'], // Chỉ định các header hợp lệ
     credentials: true, // Hỗ trợ cookie & token
 }));
 
+// Cấu hình thư mục tĩnh
 app.use('/uploads', express.static(path.join(__dirname, '../../../Server/backend/public/uploads')));
 app.use('/assets', express.static(path.join(__dirname, '../frontend/src/assets')));
 
@@ -37,7 +41,7 @@ app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/post", postRoutes);
 app.use("/collections", collectionRoutes);
-app.use("/notifications", notificationsRoutes); // Mount routes
+app.use("/notifications", notificationsRoutes);
 app.use('/vnpay', vnpayRoutes);
 
 // Khởi động server

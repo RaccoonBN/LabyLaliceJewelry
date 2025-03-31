@@ -7,6 +7,7 @@ import {
   FaCog,
   FaHistory,
   FaSignOutAlt,
+  FaCamera,
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -157,12 +158,16 @@ const Header = () => {
                       <div className="dropdown-item" onClick={() => navigate("/order-history")}>
                         <FaHistory className="dropdown-icon" /> Lịch sử đơn hàng
                       </div>
+                      <div className="dropdown-item" onClick={() => navigate("/photobooth")}>
+                        <FaCamera className="dropdown-icon" /> Chụp Photobooth
+                      </div>
                       <div className="dropdown-item" onClick={handleLogout}>
                         <FaSignOutAlt className="dropdown-icon" /> Đăng xuất
                       </div>
                     </div>
                   )}
                 </div>
+
               </>
             ) : (
               <div className="login-button">

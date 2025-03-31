@@ -1,0 +1,278 @@
+.photobooth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-top: 150px; /* Giảm khoảng cách trên */
+}
+
+.camera-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.webcam-container {
+  position: relative;
+  margin-bottom: 20px;
+  width: 700px;
+  height: 432px;
+  overflow: hidden;
+}
+
+.webcam {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.filter-controls {
+  margin-bottom: 10px;
+}
+
+.capture-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.capture-btn:hover {
+  background-color: #45a049;
+}
+
+.result-section {
+  display: flex;
+  flex-direction: row; /* Bố cục hàng ngang */
+  align-items: flex-start; /* Căn chỉnh trên cùng */
+  justify-content: space-between; /* Tạo khoảng cách giữa các phần */
+  width: 90%;
+  max-width: 900px; /* Tăng kích thước tổng thể */
+  margin: 20px auto; /* Căn giữa và tạo khoảng cách */
+}
+
+.photostrip-container {
+  flex: 1; /* Chiếm phần lớn diện tích bên trái */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photostrip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #000;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 160px; /* Kích thước photostrip */
+  height: 480px;
+  position: relative; /* Cho phép định vị sticker */
+}
+.strip-photo {
+  width: 100%; /* Chiếm toàn bộ chiều rộng của khung */
+  height: auto;  /* Chiều cao tự động điều chỉnh theo tỷ lệ khung hình */
+  max-width: 160px; /* Giữ cho chiều rộng tối đa không vượt quá 160px */
+  max-height: 100px; /* Giữ cho chiều cao tối đa không vượt quá 100px */
+  object-fit: contain; /* Đảm bảo ảnh luôn hiển thị đầy đủ */
+  object-position: center; /* Đảm bảo phần quan trọng nhất của ảnh ở giữa */
+  margin: 5px 0; /* Giảm khoảng cách */
+  border-radius: 5px;
+}
+.controls-container {
+  flex: 1; /* Chiếm phần bên phải */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.color-picker-section,
+.text-section,
+.button-section,
+.text-color-section,
+.date-color-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.text-section label,
+.text-color-section label,
+.date-color-section label {
+  margin-bottom: 5px;
+}
+
+.color-picker-section label {
+  margin-bottom: 5px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sticker {
+    position: absolute;
+    font-size: 2em;
+    cursor: grab;
+    user-select: none; /* Ngăn việc chọn văn bản khi kéo */
+    width: 50px; /* Điều chỉnh kích thước sticker */
+    height: 50px;
+}
+
+.sticker:active {
+    cursor: grabbing;
+}
+
+.remove-sticker-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+
+.countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4em;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+  z-index: 10;
+}
+.color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.color-option {
+    width: 2em;
+    height: 2em;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+.text-overlay {
+    position: absolute;
+    top: 93%; /* Điều chỉnh vị trí */
+    left: 50%; /* Căn giữa */
+    transform: translate(-50%, -50%);
+    font-size: 0.8em;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+     maxWidth: 140px;
+    wordWrap: break-word;
+    textAlign: center;
+}
+
+.date-overlay {
+    position: absolute;
+    bottom: 1%;
+    left: 50%; /* Căn giữa */
+    transform: translate(-50%, -50%);
+    font-size: 0.7em;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
+.webcam-flashing .webcam {
+  opacity: 0.5;
+  transition: opacity 0.1s ease-in-out;
+}
+.color-picker-section,
+.text-section,
+.text-color-section,
+.date-color-section,
+.button-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+input[type="color"] {
+  width: 50px;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.button-section button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+}
+
+.save-btn, .retry-btn {
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+  color: white;
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 14px;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.save-btn:hover, .retry-btn:hover {
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+  transform: scale(1.03);
+  box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.25);
+}
+
+.save-btn::before, .retry-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-30deg);
+  transition: all 0.5s;
+}
+
+.save-btn:hover::before, .retry-btn:hover::before {
+  left: 100%;
+}
+
+.retry-btn {
+  background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+}
