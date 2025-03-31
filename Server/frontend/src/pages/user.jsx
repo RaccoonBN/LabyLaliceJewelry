@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./user.css";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_URL = "http://localhost:4000/users"; // API backend
 
@@ -20,6 +22,7 @@ const UserManagement = () => {
       })
       .catch((error) => {
         console.error("Lỗi lấy dữ liệu:", error);
+        toast.error("Lỗi khi lấy danh sách người dùng.", { position: "top-right" });
       });
   }, []);
 
@@ -43,8 +46,12 @@ const UserManagement = () => {
         user.id === editingUser.id ? { ...user, fullname: editedName, email: editedEmail, password: editedPassword } : user
       ));
       setEditingUser(null);
+      toast.success("Cập nhật người dùng thành công!", { position: "top-right" });
     })
-    .catch((error) => console.error("Lỗi cập nhật:", error));
+    .catch((error) => {
+      console.error("Lỗi cập nhật:", error);
+      toast.error("Lỗi khi cập nhật người dùng.", { position: "top-right" });
+    });
   };
 
   // Hàm xóa người dùng
@@ -52,8 +59,12 @@ const UserManagement = () => {
     axios.delete(`${API_URL}/${id}`)
       .then(() => {
         setUsers(users.filter((user) => user.id !== id));
+        toast.success("Xóa người dùng thành công!", { position: "top-right" });
       })
-      .catch((error) => console.error("Lỗi xóa:", error));
+      .catch((error) => {
+        console.error("Lỗi xóa:", error);
+        toast.error("Lỗi khi xóa người dùng.", { position: "top-right" });
+      });
   };
 
   return (
@@ -110,6 +121,7 @@ const UserManagement = () => {
           </div>
         </div>
       )}
+      <ToastContainer position="top-right" autoClose={5000} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./sidebar.css";
-import { FaUsers, FaNewspaper, FaShoppingCart, FaList, FaGem, FaHome, FaBoxOpen } from "react-icons/fa";
+import { FaUsers, FaNewspaper, FaShoppingCart, FaList, FaGem, FaHome, FaBoxOpen, FaChartLine } from "react-icons/fa"; // Import new icon
 import logo from "../assets/logo.png";
 
 const Sidebar = () => {
@@ -61,6 +61,12 @@ const Sidebar = () => {
             <Link to="/products" className={location.pathname === "/products" ? "active" : ""}>
               <FaBoxOpen className="icon" />
               {isOpen && "Quản lý sản phẩm"}
+            </Link>
+          </li>
+          <li>
+            <Link to="/revenue-prediction" className={location.pathname === "/revenue-prediction" ? "active" : ""}>
+              <FaChartLine className="icon" />
+              {isOpen && "Dự đoán doanh thu"}
             </Link>
           </li>
         </ul>

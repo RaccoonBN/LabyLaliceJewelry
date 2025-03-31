@@ -5,6 +5,8 @@ import axios from "axios";
 import { useDropzone } from 'react-dropzone';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_BASE_URL = "http://localhost:4000/blogs"; // Giữ nguyên /blogs
 
@@ -35,18 +37,25 @@ const BlogManagement = () => {
         } catch (error) {
             console.error("Lỗi khi lấy danh sách bài viết:", error);
             setError("Lỗi khi lấy danh sách bài viết. Vui lòng thử lại sau.");
+            toast.error("Lỗi khi lấy danh sách bài viết.", { position: "top-right" });
         }
     };
 
-    const openModal = (blog = null) => { // Sửa  post thành blog
-        setEditingBlog(blog); //Sửa  editingPost thành editingBlog
-        setTitle(blog ? blog.title : ""); //Sửa  post thành blog
-        setSummary(blog ? blog.content : ""); // content -> summary
-        setImage(null);
-        setImageSrc(null);
-        setCroppedImage(null);
+   // Inside openModal function:
+    const openModal = (blog = null) => {
+        setEditingBlog(blog);
+        setTitle(blog ? blog.title : "");
+        setSummary(blog ? blog.content : "");
+        setImage(null); // reset image
+        setCroppedImage(null); // reset cropped image
+        setError(null);
+
+        // Initialize imageSrc with existing image URL if editing
+        setImageSrc(blog ? blog.image : null);
+
         setModalOpen(true);
     };
+
 
     const closeModal = () => {
         setModalOpen(false);
@@ -104,36 +113,39 @@ const BlogManagement = () => {
     const handleSubmit = async () => {
         setLoading(true);
         setError(null);
-
+    
         const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', summary);
+        formData.append('title', title || ''); // Use empty string as default
+        formData.append('content', summary || ''); // Use empty string as default
         if (image) {
             formData.append('image', image);
         }
-
+    
         try {
             let response;
-            if (editingBlog) {  //Sửa  editingPost thành editingBlog
-                response = await axios.put(`${API_BASE_URL}/${editingBlog.id}`, formData, { //Sửa  editingPost thành editingBlog
+            if (editingBlog) {
+                response = await axios.put(`${API_BASE_URL}/${editingBlog.id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
+                toast.success("Cập nhật bài viết thành công!", { position: "top-right" });
             } else {
                 response = await axios.post(`${API_BASE_URL}/create`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
+                toast.success("Thêm bài viết thành công!", { position: "top-right" });
             }
-
+    
             console.log("API response:", response.data);
-            fetchBlogs(); // Sửa fetchPost thành fetchBlogs
+            fetchBlogs();
             closeModal();
         } catch (error) {
             console.error("Lỗi khi đăng/chỉnh sửa bài viết:", error);
             setError("Lỗi khi đăng/chỉnh sửa bài viết. Vui lòng thử lại.");
+            toast.error("Lỗi khi đăng/chỉnh sửa bài viết.", { position: "top-right" });
         } finally {
             setLoading(false);
         }
@@ -143,10 +155,18 @@ const BlogManagement = () => {
         try {
             await axios.delete(`${API_BASE_URL}/${id}`);
             fetchBlogs(); // Sửa fetchPost thành fetchBlogs
+            toast.success("Xóa bài viết thành công!", { position: "top-right" });
         } catch (error) {
             console.error("Lỗi khi xóa bài viết:", error);
             setError("Lỗi khi xóa bài viết. Vui lòng thử lại.");
+            toast.error("Lỗi khi xóa bài viết.", { position: "top-right" });
         }
+    };
+
+    const resetImage = () => {
+        setImageSrc(null);
+        setImage(null);
+        setCroppedImage(null);
     };
 
     return (
@@ -158,17 +178,17 @@ const BlogManagement = () => {
 
             <div className="post-list">
                 {blogs.map((blog) => ( //Sửa  posts thành blogs
-                    <div key={blog.id} className="post-card"> 
-                        <img src={blog.image || "/default-blog.jpg"} alt="Blog" /> 
+                    <div key={blog.id} className="post-card">
+                        <img src={blog.image || "/default-blog.jpg"} alt="Blog" />
                         <h3>{blog.title}</h3>
                         <p>{blog.content}</p>
-                      {/* Thêm tên tác giả */}
-                      <p className="author">Tác giả: {blog.author}</p>
+                        {/* Thêm tên tác giả */}
+                        <p className="author">Tác giả: {blog.author}</p>
                         <div className="action-buttons">
                             <button className="edit-btn" onClick={() => openModal(blog)}>
                                 <FaEdit />
                             </button>
-                            <button className="delete-btn" onClick={() => deleteBlog(blog.id)}> 
+                            <button className="delete-btn" onClick={() => deleteBlog(blog.id)}>
                                 <FaTrash />
                             </button>
                         </div>
@@ -179,7 +199,7 @@ const BlogManagement = () => {
             {modalOpen && (
                 <div className="post-modal-overlay">
                     <div className="post-modal-content">
-                        <div className="h2-modal">{editingBlog ? "Chỉnh sửa bài viết" : "Đăng bài mới"} 
+                        <div className="h2-modal">{editingBlog ? "Chỉnh sửa bài viết" : "Đăng bài mới"}
                         </div>
                         <div className="post-modal-body">
                             <div className="post-content-left">
@@ -199,7 +219,7 @@ const BlogManagement = () => {
                             </div>
 
                             <div className="post-content-right">
-                                {!imageSrc && (
+                                { !imageSrc && (
                                     <div {...getRootProps()} className="dropzone">
                                         <input {...getInputProps()} />
                                         <p>Kéo thả ảnh hoặc bấm để tải lên</p>
@@ -209,11 +229,12 @@ const BlogManagement = () => {
 
                                 {imageSrc && !croppedImage && (
                                     <>
+                                        <img ref={imgRef} src={imageSrc} alt="Preview" className="preview-img" />
                                         <ReactCrop crop={crop} onChange={(c) => setCrop(c)} aspect={1}>
                                             <img ref={imgRef} src={imageSrc} alt="Preview" className="preview-img" />
                                         </ReactCrop>
                                         <div className="post-modal-buttons">
-                                            <button className="post-modal-reselect" onClick={() => { setImageSrc(null); setImage(null); }}>Chọn lại</button>
+                                            <button className="post-modal-reselect" onClick={resetImage}>Chọn lại</button>
                                             <button className="post-modal-confirm" onClick={handleCropComplete}>OK</button>
                                         </div>
                                     </>
@@ -223,7 +244,7 @@ const BlogManagement = () => {
                                     <>
                                         <img src={croppedImage} alt="Cropped" className="preview-img" />
                                         <div className="post-modal-buttons">
-                                            <button className="post-modal-reselect" onClick={() => { setCroppedImage(null); setImageSrc(null); setImage(null); }}>Chọn lại</button>
+                                            <button className="post-modal-reselect" onClick={resetImage}>Chọn lại</button>
                                         </div>
                                     </>
                                 )}
@@ -239,6 +260,7 @@ const BlogManagement = () => {
                     </div>
                 </div>
             )}
+            <ToastContainer position="top-right" autoClose={5000} />
         </div>
     );
 };

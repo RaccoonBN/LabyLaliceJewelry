@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./category.css";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const API_URL = "http://localhost:4000/categories"; 
+const API_URL = "http://localhost:4000/categories";
 
 const CategoryManagement = () => {
   const [categories, setCategories] = useState([]);
@@ -23,6 +25,7 @@ const CategoryManagement = () => {
       setCategories(data);
     } catch (error) {
       console.error("Lỗi lấy danh mục:", error);
+      toast.error("Lỗi khi lấy danh sách danh mục.", { position: "top-right" });
     }
   };
 
@@ -43,7 +46,10 @@ const CategoryManagement = () => {
 
   // Lưu danh mục (Thêm/Sửa)
   const saveCategory = async () => {
-    if (categoryName.trim() === "") return;
+    if (categoryName.trim() === "") {
+      toast.warn("Vui lòng nhập tên danh mục.", { position: "top-right" });
+      return;
+    }
 
     try {
       if (isEditing) {
@@ -52,18 +58,23 @@ const CategoryManagement = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: categoryName }),
         });
+        toast.success("Cập nhật danh mục thành công!", { position: "top-right" });
       } else {
-        await fetch(API_URL, {
+        const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: categoryName }),
         });
+        const data = await response.json(); // Get data for successful creation
+        setCategories([...categories, data]); // Add new data
+        toast.success("Thêm danh mục thành công!", { position: "top-right" });
       }
 
       fetchCategories(); // Cập nhật lại danh sách sau khi lưu
       closeModal();
     } catch (error) {
       console.error("Lỗi khi lưu danh mục:", error);
+      toast.error("Lỗi khi lưu danh mục.", { position: "top-right" });
     }
   };
 
@@ -71,9 +82,11 @@ const CategoryManagement = () => {
   const deleteCategory = async (id) => {
     try {
       await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      fetchCategories(); // Cập nhật lại danh sách
+      setCategories(categories.filter((category) => category.id !== id));
+      toast.success("Xóa danh mục thành công!", { position: "top-right" });
     } catch (error) {
       console.error("Lỗi khi xóa danh mục:", error);
+      toast.error("Lỗi khi xóa danh mục.", { position: "top-right" });
     }
   };
 
@@ -139,6 +152,7 @@ const CategoryManagement = () => {
           </div>
         </div>
       )}
+       <ToastContainer position="top-right" autoClose={5000} />
     </div>
   );
 };

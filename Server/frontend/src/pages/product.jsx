@@ -4,6 +4,8 @@ import "./product.css";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import demosp from "../assets/demosp.png"; // Ảnh mặc định
 import * as XLSX from 'xlsx';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductManagement = () => {
 
@@ -51,6 +53,7 @@ const ProductManagement = () => {
             setProducts(res.data);
         } catch (error) {
             console.error("Lỗi khi tải sản phẩm:", error);
+            toast.error("Lỗi khi tải sản phẩm.", { position: "top-right" });
         }
     };
 
@@ -58,15 +61,17 @@ const ProductManagement = () => {
         try {
             await axios.delete(`http://localhost:4000/product/product/${id}`);
             setProducts(products.filter((product) => product.id !== id));
+            toast.success("Xóa sản phẩm thành công!", { position: "top-right" });
         } catch (error) {
             console.error("Lỗi khi xóa sản phẩm:", error);
+            toast.error("Lỗi khi xóa sản phẩm.", { position: "top-right" });
         }
     };
 
     const openModal = (product = null) => {
         setEditProduct(product);
         setIsModalOpen(true);
-        setImagePreview(product?.image ? `http://localhost:4000/product/uploads/${product.image}` : null);
+        setImagePreview(product?.image ? product.image : null);
     };
 
     const closeModal = () => {
@@ -104,14 +109,17 @@ const ProductManagement = () => {
                 await axios.put(`http://localhost:4000/product/product/${editProduct.id}`, formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
+                toast.success("Cập nhật sản phẩm thành công!", { position: "top-right" });
             } else {
                 await axios.post("http://localhost:4000/product/product", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
+                toast.success("Thêm sản phẩm thành công!", { position: "top-right" });
             }
             fetchProducts();
         } catch (error) {
             console.error("Lỗi khi lưu sản phẩm:", error);
+            toast.error("Lỗi khi lưu sản phẩm.", { position: "top-right" });
         }
 
         closeModal();
@@ -149,27 +157,30 @@ const ProductManagement = () => {
             return 0;
         });
 
-    console.log("🟢 Danh sách sản phẩm sau khi lọc:", filteredProducts);
-
-
-
     // Phân trang
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
     const exportToExcel = () => {
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(products.map(product => ({
-            "Tên sản phẩm": product.name,
-            "Danh mục": product.category_name,
-            "Bộ sưu tập": product.collection_name,
-            "Giá": product.price,
-            "Số lượng": product.stock,
-            "Mô tả": product.description
-        })));
-        XLSX.utils.book_append_sheet(wb, ws, 'Products');
-        XLSX.writeFile(wb, 'products.xlsx');
+        try {
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(filteredProducts.map(product => ({ // Changed products to filteredProducts
+                "Tên sản phẩm": product.name,
+                "Danh mục": product.category_name,
+                "Bộ sưu tập": product.collection_name,
+                "Giá": product.price,
+                "Số lượng": product.stock,
+                "Mô tả": product.description
+            })));
+            XLSX.utils.book_append_sheet(wb, ws, 'Products');
+            XLSX.writeFile(wb, 'products.xlsx');
+            toast.success("Xuất Excel thành công!", { position: "top-right" });
+        } catch (error) {
+            console.error("Lỗi khi xuất Excel:", error);
+            toast.error("Lỗi khi xuất Excel.", { position: "top-right" });
+        }
+
     };
 
     return (
@@ -214,8 +225,8 @@ const ProductManagement = () => {
                     currentProducts.map((product) => (
                         <div key={product.id} className="product-card">
                             <img
-                                src={product.image ? product.image : demosp}
-                                alt={product.name}
+                            src={product.image ? product.image : demosp}
+                            alt={product.name}
                                 className="product-image"
                             />
                             <h3 className="product-name">{product.name}</h3>
@@ -332,6 +343,7 @@ const ProductManagement = () => {
                 </div>
 
             )}
+           <ToastContainer position="top-right" autoClose={5000} />
         </div>
     );
 };

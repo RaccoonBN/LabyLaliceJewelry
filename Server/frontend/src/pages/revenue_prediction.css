@@ -1,0 +1,120 @@
+.revenue-container {
+    max-width: 900px;
+    margin: 70px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    color: #333;
+
+}
+
+.revenue-title {
+    font-size: 44px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #de4bb1;
+}
+
+.revenue-error {
+    color: #ff4d4d;
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.revenue-success {
+    color: #28a745;
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.revenue-main-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.revenue-input-area {
+    width: 40%;
+    text-align: left;
+}
+
+.revenue-result-area {
+    width: 55%;
+}
+
+.revenue-form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.revenue-form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.revenue-input, .revenue-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    color: #333;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.revenue-input:focus, .revenue-select:focus {
+    border-color: #de4bb1;
+    outline: none;
+    box-shadow: 0 0 5px rgba(222, 75, 177, 0.5);
+}
+
+.revenue-button {
+    background: linear-gradient(90deg, #de4bb1, #cc9fff);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.revenue-button:hover {
+    background: #cc0099;
+}
+
+.revenue-results {
+    margin-top: 20px;
+}
+
+.revenue-result {
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #de4bb1;
+    text-align: left;
+}
+
+.revenue-chart {
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .revenue-main-content {
+        flex-direction: column;
+    }
+    .revenue-input-area, .revenue-result-area {
+        width: 100%;
+    }
+}

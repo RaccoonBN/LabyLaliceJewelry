@@ -9,6 +9,8 @@ import OrderManagement from "./pages/order";
 import CategoryManagement from "./pages/category";
 import CollectionManagement from "./pages/collection";
 import ProductManagement from "./pages/product";
+import RevenuePrediction from "./pages/revenue_prediction";
+
 function App() {
   return (
     <Router>
@@ -23,6 +25,7 @@ function App() {
             <Route path="/categories" element={<CategoryManagement />} />
             <Route path="/collections" element={<CollectionManagement />} />
             <Route path="/products" element={<ProductManagement />} />
+            <Route path="/revenue-prediction" element={<RevenuePrediction />} />
 
             {/* Thêm các trang quản lý khác */}
           </Routes>

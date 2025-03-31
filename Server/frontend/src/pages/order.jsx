@@ -6,6 +6,8 @@ import moment from 'moment';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_BASE_URL = "http://localhost:4000/orders/all";
 
@@ -25,9 +27,11 @@ const OrderManagement = () => {
                 setOrders(response.data);
             } else {
                 console.error("API trả về dữ liệu không hợp lệ (không phải mảng):", response.data);
+                toast.error("API trả về dữ liệu không hợp lệ.", { position: "top-right" });
             }
         } catch (error) {
             console.error("Lỗi khi lấy danh sách đơn hàng:", error);
+            toast.error("Lỗi khi lấy danh sách đơn hàng.", { position: "top-right" });
         }
     };
 
@@ -39,8 +43,10 @@ const OrderManagement = () => {
                     order.order_id === orderId ? { ...order, status: newStatus } : order
                 )
             );
+            toast.success("Cập nhật trạng thái đơn hàng thành công!", { position: "top-right" });
         } catch (error) {
             console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+            toast.error("Lỗi khi cập nhật trạng thái đơn hàng.", { position: "top-right" });
         }
     };
 
@@ -59,6 +65,7 @@ const OrderManagement = () => {
         const input = document.getElementById('order-detail-pdf'); // Sử dụng ID mới
         if (!input) {
             console.error("Không tìm thấy phần tử với id 'order-detail-pdf'");
+            toast.error("Không tìm thấy phần tử để tạo PDF.", { position: "top-right" });
             return;
         }
 
@@ -70,16 +77,24 @@ const OrderManagement = () => {
             const imgHeight = canvas.height * imgWidth / canvas.width;
             pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
             pdf.save(`order-${order.order_id}.pdf`);
+            toast.success("Xuất PDF thành công!", { position: "top-right" });
         } catch (error) {
             console.error("Lỗi tạo PDF:", error);
+            toast.error("Lỗi tạo PDF.", { position: "top-right" });
         }
     };
 
     const exportToExcel = () => {
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(orders);
-        XLSX.utils.book_append_sheet(wb, ws, 'Orders');
-        XLSX.writeFile(wb, 'orders.xlsx');
+        try {
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(orders);
+            XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+            XLSX.writeFile(wb, 'orders.xlsx');
+            toast.success("Xuất Excel thành công!", { position: "top-right" });
+        } catch (error) {
+            console.error("Lỗi khi xuất Excel:", error);
+            toast.error("Lỗi khi xuất Excel.", { position: "top-right" });
+        }
     };
 
     return (
@@ -196,6 +211,7 @@ const OrderManagement = () => {
                     </div>
                 </div>
             )}
+            <ToastContainer position="top-right" autoClose={5000} />
         </div>
     );
 };

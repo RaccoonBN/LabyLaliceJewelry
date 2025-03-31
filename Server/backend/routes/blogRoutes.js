@@ -102,49 +102,44 @@ router.get('/', async (req, res) => {
         }
     }
 });
-
-
-// 🟢 API Admin chỉnh sửa bài viết
 router.put('/:blog_id', upload.single("image"), async (req, res) => {
     let connection;
     try {
         connection = await pool.getConnection();
         const { blog_id } = req.params;
-        const { user_id, title, content } = req.body;
-        const newImage = req.file ? req.file.filename : null;
+        let { user_id, title, content } = req.body; // Declare with let to modify
 
         if (!blog_id || isNaN(blog_id)) {
             return res.status(400).json({ error: 'blog_id không hợp lệ' });
         }
 
         // Lấy thông tin bài viết hiện tại
-        const [rows] = await connection.execute('SELECT * FROM blogs WHERE id = ?', [blog_id]);
+        const [rows] = await connection.execute('SELECT image FROM blogs WHERE id = ?', [blog_id]);
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Không tìm thấy bài viết' });
         }
         const existingBlog = rows[0];
 
-        let sql = 'UPDATE blogs SET user_id = ?, title = ?, content = ?';
-        let params = [user_id, title, content];
-
-        if (newImage) {
-            // Nếu có ảnh mới, cập nhật cả đường dẫn ảnh
-            sql += ', image = ?';
-            params.push(newImage);
-
-            // Xóa ảnh cũ nếu có
-            if (existingBlog.image) {
-                const imagePath = path.join(__dirname, "../public/uploads/", existingBlog.image);
-                fs.unlink(imagePath, (err) => {
-                    if (err) {
-                        console.warn(`Không thể xóa ảnh cũ: ${existingBlog.image}`, err);
-                    }
-                });
-            }
+        // Check if user_id is undefined, and set it to null or a default value
+        if (user_id === undefined) {
+            user_id = null; // Or a default user ID if appropriate
         }
 
-        sql += ' WHERE id = ?';
-        params.push(blog_id);
+        // Check and handle other fields as well
+        title = title === undefined ? null : title;
+        content = content === undefined ? null : content;
+
+        let image = null;
+        if (req.file){
+            image = req.file.filename
+        }
+        else{
+            image = existingBlog.image
+        }
+
+        let sql = 'UPDATE blogs SET user_id = ?, title = ?, content = ?, image = ? WHERE id = ?';
+        // all values has to update , include the newImage
+        let params = [user_id, title, content, image, blog_id];
 
         const [result] = await connection.execute(sql, params);
 
