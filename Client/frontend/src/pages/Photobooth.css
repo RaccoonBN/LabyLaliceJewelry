@@ -224,7 +224,6 @@ input[type="color"] {
 input[type="text"] {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
   border-radius: 5px;
 }
 .button-section button {
@@ -275,4 +274,41 @@ input[type="text"] {
 
 .retry-btn {
   background: linear-gradient(90deg, #DE4BB1, #CC9FFF);
+}
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Định dạng cho nhãn "Chọn Filter" */
+.filter-controls label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+/* Định dạng cho select dropdown */
+.filter-controls select {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  width: 200px;
+  transition: all 0.3s ease;
+}
+
+/* Thêm hiệu ứng hover cho dropdown */
+.filter-controls select:hover {
+  border-color: #888;
+}
+
+/* Thêm hiệu ứng focus cho select */
+.filter-controls select:focus {
+  border-color: #555;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
