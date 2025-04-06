@@ -102,6 +102,8 @@ router.get('/', async (req, res) => {
         }
     }
 });
+
+// 🟢 API Admin chỉnh sửa bài viết
 router.put('/:blog_id', upload.single("image"), async (req, res) => {
     let connection;
     try {
@@ -120,25 +122,23 @@ router.put('/:blog_id', upload.single("image"), async (req, res) => {
         }
         const existingBlog = rows[0];
 
-        // Check if user_id is undefined, and set it to null or a default value
-        if (user_id === undefined) {
-            user_id = null; // Or a default user ID if appropriate
+        // Nếu user_id không có, mặc định là 6
+        if (!user_id) {
+            user_id = 6;
         }
 
-        // Check and handle other fields as well
+        // Kiểm tra và xử lý các trường dữ liệu khác
         title = title === undefined ? null : title;
         content = content === undefined ? null : content;
 
         let image = null;
-        if (req.file){
-            image = req.file.filename
-        }
-        else{
-            image = existingBlog.image
+        if (req.file) {
+            image = req.file.filename;
+        } else {
+            image = existingBlog.image;
         }
 
         let sql = 'UPDATE blogs SET user_id = ?, title = ?, content = ?, image = ? WHERE id = ?';
-        // all values has to update , include the newImage
         let params = [user_id, title, content, image, blog_id];
 
         const [result] = await connection.execute(sql, params);
@@ -158,6 +158,7 @@ router.put('/:blog_id', upload.single("image"), async (req, res) => {
         }
     }
 });
+
 
 // 🟢 API Admin xóa bài viết
 router.delete('/:blog_id', async (req, res) => {

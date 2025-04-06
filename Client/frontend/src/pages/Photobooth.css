@@ -126,6 +126,7 @@
     position: absolute;
     font-size: 2em;
     cursor: grab;
+    -webkit-user-select: none; /* Ngăn việc chọn văn bản khi kéo trên Safari */
     user-select: none; /* Ngăn việc chọn văn bản khi kéo */
     width: 50px; /* Điều chỉnh kích thước sticker */
     height: 50px;
